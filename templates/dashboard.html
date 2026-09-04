@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jewellery Billing Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Shree Ram Kumar Jewellers</h1>
+
+        <div class="shop-info">
+            <h2>Dashboard</h2>
+            <p>Harraipur Alamchand, Kaushambi</p>
+        </div>
+
+        <hr>
+
+        <div style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+            gap:20px;
+            margin-top:30px;
+        ">
+
+            <div style="
+                padding:25px;
+                border:1px solid #ddd;
+                border-radius:12px;
+                text-align:center;
+            ">
+                <h2>₹{{ total_sales }}</h2>
+                <p>Total Sales</p>
+            </div>
+
+            <div style="
+                padding:25px;
+                border:1px solid #ddd;
+                border-radius:12px;
+                text-align:center;
+            ">
+                <h2>{{ total_bills }}</h2>
+                <p>Total Bills</p>
+            </div>
+
+            <div style="
+                padding:25px;
+                border:1px solid #ddd;
+                border-radius:12px;
+                text-align:center;
+            ">
+                <h2>{{ total_customers }}</h2>
+                <p>Total Customers</p>
+            </div>
+
+        </div>
+
+
+        <br><br>
+
+        <div style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+            gap:20px;
+        ">
+
+            <a href="/new-bill" style="text-decoration:none;">
+                <button style="width:100%; padding:20px;">
+                    🧾 Create New Bill
+                </button>
+            </a>
+
+            <a href="/bills" style="text-decoration:none;">
+                <button style="width:100%; padding:20px;">
+                    📋 Bill History
+                </button>
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

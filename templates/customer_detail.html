@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Khata</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Shree Ram Kumar Jewellers</h1>
+
+    <div class="shop-info">
+        <h2>Customer Khata</h2>
+        <p>Harraipur Alamchand, Kaushambi</p>
+    </div>
+
+    <hr>
+
+    <h2>{{ customer_name }}</h2>
+
+    <p>
+        <strong>Mobile:</strong>
+        {{ mobile }}
+    </p>
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+        gap:15px;
+        margin:25px 0;
+    ">
+
+        <div style="padding:20px; border:1px solid #ddd;">
+            <h3>Total Purchase</h3>
+            <h2>₹{{ "%.2f"|format(total_purchase) }}</h2>
+        </div>
+
+        <div style="padding:20px; border:1px solid #ddd;">
+            <h3>Total Paid</h3>
+            <h2>₹{{ "%.2f"|format(total_paid) }}</h2>
+        </div>
+
+        <div style="padding:20px; border:1px solid #ddd;">
+            <h3>Total Due</h3>
+            <h2>₹{{ "%.2f"|format(total_balance) }}</h2>
+        </div>
+
+    </div>
+
+
+    <h3>Bill History</h3>
+
+    <table>
+
+        <thead>
+        <tr>
+            <th>Bill No.</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Paid</th>
+            <th>Due</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        {% for bill in bills %}
+
+        <tr>
+
+            <td>
+                {{ bill["bill_no"] }}
+            </td>
+
+            <td>
+                {{ bill["created_at"] }}
+            </td>
+
+            <td>
+                ₹{{ "%.2f"|format(bill["grand_total"]) }}
+            </td>
+
+            <td>
+                ₹{{ "%.2f"|format(bill["amount_paid"]) }}
+            </td>
+
+            <td>
+                ₹{{ "%.2f"|format(bill["balance"]) }}
+            </td>
+
+            <td>
+
+                <a href="/bill/{{ bill['id'] }}">
+                    <button type="button">
+                        View Bill
+                    </button>
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    <br>
+
+    <a href="/customers">
+        <button type="button">
+            ← Back to Customers
+        </button>
+    </a>
+
+    <a href="/">
+        <button type="button">
+            Dashboard
+        </button>
+    </a>
+
+</div>
+
+</body>
+</html>

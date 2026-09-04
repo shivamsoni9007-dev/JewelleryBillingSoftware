@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Khata</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Shree Ram Kumar Jewellers</h1>
+
+    <div class="shop-info">
+        <h2>Customer Khata / Udhaar</h2>
+        <p>Harraipur Alamchand, Kaushambi</p>
+    </div>
+
+    <hr>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Mobile</th>
+            <th>Total Purchase</th>
+            <th>Total Paid</th>
+            <th>Balance Due</th>
+            <th>View</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        {% for customer in customers %}
+
+        <tr>
+
+            <td>{{ customer["customer_name"] }}</td>
+
+            <td>{{ customer["customer_mobile"] }}</td>
+
+            <td>
+                ₹{{ "%.2f"|format(customer["total_purchase"]) }}
+            </td>
+
+            <td>
+                ₹{{ "%.2f"|format(customer["total_paid"]) }}
+            </td>
+
+            <td>
+                ₹{{ "%.2f"|format(customer["total_balance"]) }}
+            </td>
+
+            <td>
+                <a href="/customer/{{ customer['customer_mobile'] }}">
+                    <button type="button">
+                        View Khata
+                    </button>
+                </a>
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <br>
+
+    <a href="/">
+        <button type="button">
+            Dashboard
+        </button>
+    </a>
+
+</div>
+
+</body>
+</html>

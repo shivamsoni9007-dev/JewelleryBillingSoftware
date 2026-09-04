@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Bill History</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Shree Ram Kumar Jewellers</h1>
+
+    <div class="shop-info">
+
+        <h2>Bill History</h2>
+
+        <p>Saved Customer Bills</p>
+
+    </div>
+
+    <hr>
+
+
+    {% if bills %}
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>Bill No.</th>
+
+            <th>Customer</th>
+
+            <th>Mobile</th>
+
+            <th>Total</th>
+
+            <th>Date</th>
+
+            <th>Action</th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        {% for bill in bills %}
+
+        <tr>
+
+            <td>
+                {{ bill["bill_no"] }}
+            </td>
+
+
+            <td>
+                {{ bill["customer_name"] }}
+            </td>
+
+
+            <td>
+                {{ bill["customer_mobile"] }}
+            </td>
+
+
+            <td>
+                ₹{{ bill["grand_total"] }}
+            </td>
+
+
+            <td>
+                {{ bill["created_at"] }}
+            </td>
+
+
+            <td>
+
+                <a href="/bill/{{ bill['id'] }}">
+
+                    <button type="button">
+                        View
+                    </button>
+
+                </a>
+
+
+                <form
+                    action="/delete_bill/{{ bill['id'] }}"
+                    method="POST"
+                    style="display:inline;"
+
+                    onsubmit="return confirm('Kya aap sach me ye bill delete karna chahte hain?');">
+
+                    <button type="submit">
+                        Delete
+                    </button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    {% else %}
+
+        <h3>No Bills Found</h3>
+
+    {% endif %}
+
+
+    <br><br>
+
+
+    <a href="/">
+
+        <button type="button">
+            + Create New Bill
+        </button>
+
+    </a>
+
+
+</div>
+
+</body>
+
+</html>

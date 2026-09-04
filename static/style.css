@@ -1,0 +1,151 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f2f2f2;
+    padding: 30px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.shop-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.shop-info h2 {
+    margin-bottom: 8px;
+}
+
+.customer-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+h3 {
+    margin: 20px 0 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background: #eeeeee;
+}
+
+td input,
+td select {
+    padding: 7px;
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: bold;
+}
+
+.total-section {
+    margin-top: 25px;
+    margin-left: auto;
+    max-width: 350px;
+}
+
+.total-section p {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-section h2 {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #333;
+}
+
+.buttons {
+    text-align: center;
+    margin-top: 25px;
+}
+
+@media (max-width: 800px) {
+
+    .customer-section {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 500px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .customer-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media print {
+
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .container {
+        box-shadow: none;
+        max-width: 100%;
+    }
+
+    button {
+        display: none;
+    }
+}

@@ -1,4 +1,7 @@
 import os
+import csv
+import io
+
 from functools import wraps
 
 from flask import (
@@ -8,7 +11,8 @@ from flask import (
     jsonify,
     redirect,
     url_for,
-    session
+    session,
+    Response
 )
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,6 +21,7 @@ from database import get_db_connection, init_db
 
 
 app = Flask(__name__)
+
 
 # =========================================================
 # SECURITY SETTINGS
@@ -30,7 +35,6 @@ app.secret_key = os.environ.get(
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
-# Password ko memory me hashed form me rakhenge
 ADMIN_PASSWORD_HASH = (
     generate_password_hash(ADMIN_PASSWORD)
     if ADMIN_PASSWORD
@@ -46,7 +50,7 @@ init_db()
 
 
 # =========================================================
-# LOGIN REQUIRED DECORATOR
+# LOGIN REQUIRED
 # =========================================================
 
 def login_required(route_function):
@@ -56,7 +60,6 @@ def login_required(route_function):
 
         if not session.get("logged_in"):
 
-            # save_bill AJAX request hai
             if request.path == "/save_bill":
 
                 return jsonify({
@@ -78,7 +81,6 @@ def login_required(route_function):
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
-    # Already logged in
     if session.get("logged_in"):
         return redirect(url_for("dashboard"))
 
@@ -96,7 +98,6 @@ def login():
             ""
         )
 
-        # Environment variables check
         if not ADMIN_USERNAME or not ADMIN_PASSWORD_HASH:
 
             error = (
@@ -178,9 +179,9 @@ def dashboard():
     return render_template(
         "dashboard.html",
         total_bills=total_bills,
-        total_sales=round(total_sales, 2),
+        total_sales=round(float(total_sales), 2),
         total_customers=total_customers,
-        total_due=round(total_due, 2)
+        total_due=round(float(total_due), 2)
     )
 
 
@@ -275,10 +276,6 @@ def save_bill():
             []
         )
 
-        # -------------------------
-        # VALIDATION
-        # -------------------------
-
         if not bill_no:
 
             return jsonify({
@@ -315,10 +312,6 @@ def save_bill():
 
         conn = get_db_connection()
 
-        # -------------------------
-        # DUPLICATE BILL CHECK
-        # -------------------------
-
         existing_bill = conn.execute("""
             SELECT id
             FROM bills
@@ -334,10 +327,6 @@ def save_bill():
                 "message":
                     "Ye Bill Number pehle se use ho chuka hai."
             })
-
-        # -------------------------
-        # SAVE BILL
-        # -------------------------
 
         cursor = conn.execute("""
             INSERT INTO bills (
@@ -367,10 +356,6 @@ def save_bill():
         ))
 
         bill_id = cursor.lastrowid
-
-        # -------------------------
-        # SAVE ITEMS
-        # -------------------------
 
         for item in items:
 
@@ -434,10 +419,8 @@ def save_bill():
 
         return jsonify({
             "success": True,
-            "message":
-                "Bill Saved Successfully!",
-            "bill_id":
-                bill_id
+            "message": "Bill Saved Successfully!",
+            "bill_id": bill_id
         })
 
     except Exception as e:
@@ -483,6 +466,83 @@ def bills():
     return render_template(
         "bills.html",
         bills=all_bills
+    )
+
+
+# =========================================================
+# EXPORT BILLS CSV
+# =========================================================
+
+@app.route("/export-bills")
+@login_required
+def export_bills():
+
+    conn = get_db_connection()
+
+    bills_data = conn.execute("""
+        SELECT
+            bill_no,
+            customer_name,
+            customer_mobile,
+            subtotal,
+            discount,
+            gst,
+            grand_total,
+            payment_mode,
+            amount_paid,
+            balance,
+            created_at
+        FROM bills
+        ORDER BY id DESC
+    """).fetchall()
+
+    conn.close()
+
+    output = io.StringIO()
+
+    writer = csv.writer(output)
+
+    writer.writerow([
+        "Bill No",
+        "Customer Name",
+        "Mobile",
+        "Subtotal",
+        "Discount",
+        "GST",
+        "Grand Total",
+        "Payment Mode",
+        "Amount Paid",
+        "Balance",
+        "Date"
+    ])
+
+    for bill in bills_data:
+
+        writer.writerow([
+            bill["bill_no"],
+            bill["customer_name"],
+            bill["customer_mobile"],
+            bill["subtotal"],
+            bill["discount"],
+            bill["gst"],
+            bill["grand_total"],
+            bill["payment_mode"],
+            bill["amount_paid"],
+            bill["balance"],
+            bill["created_at"]
+        ])
+
+    csv_data = output.getvalue()
+
+    output.close()
+
+    return Response(
+        csv_data,
+        mimetype="text/csv",
+        headers={
+            "Content-Disposition":
+                "attachment; filename=jewellery_bills_backup.csv"
+        }
     )
 
 
@@ -783,8 +843,7 @@ def receive_payment(bill_id):
             return redirect(
                 url_for(
                     "customer_detail",
-                    mobile=
-                        bill["customer_mobile"]
+                    mobile=bill["customer_mobile"]
                 )
             )
 
@@ -795,20 +854,12 @@ def receive_payment(bill_id):
                 400
             )
 
-        new_paid = (
-            current_paid + amount
-        )
+        new_paid = current_paid + amount
 
-        new_balance = (
-            current_balance - amount
-        )
+        new_balance = current_balance - amount
 
         if new_balance < 0.01:
             new_balance = 0
-
-        # -------------------------
-        # UPDATE BILL
-        # -------------------------
 
         conn.execute("""
             UPDATE bills
@@ -823,10 +874,6 @@ def receive_payment(bill_id):
             new_balance,
             bill_id
         ))
-
-        # -------------------------
-        # PAYMENT HISTORY
-        # -------------------------
 
         conn.execute("""
             INSERT INTO payments (
@@ -847,9 +894,7 @@ def receive_payment(bill_id):
 
         conn.commit()
 
-        mobile = (
-            bill["customer_mobile"]
-        )
+        mobile = bill["customer_mobile"]
 
         return redirect(
             url_for(

@@ -1,149 +1,374 @@
+// =====================================================
+// DATE
+// =====================================================
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    const billDate = document.getElementById("billDate");
+    const dateField =
+        document.getElementById("bill_date");
 
-    if (billDate) {
+    if (dateField) {
+
         const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0");
-        const day = String(today.getDate()).padStart(2, "0");
 
-        billDate.value = `${year}-${month}-${day}`;
+        const yyyy = today.getFullYear();
+
+        const mm =
+            String(today.getMonth() + 1)
+                .padStart(2, "0");
+
+        const dd =
+            String(today.getDate())
+                .padStart(2, "0");
+
+        dateField.value =
+            `${yyyy}-${mm}-${dd}`;
     }
 
-    calculateBill();
+
+    calculateBillTotal();
+
 });
 
 
-function getNumber(value) {
+// =====================================================
+// METAL CHANGE
+// =====================================================
 
-    const number = parseFloat(value);
+function metalChanged(selectElement) {
 
-    if (isNaN(number)) {
-        return 0;
+    const row =
+        selectElement.closest("tr");
+
+    const purity =
+        row.querySelector(".purity");
+
+    const metal =
+        selectElement.value;
+
+
+    purity.innerHTML = "";
+
+
+    if (metal === "Silver") {
+
+        purity.innerHTML = `
+
+            <option value="100%">
+                Silver 100%
+            </option>
+
+            <option value="95%">
+                Silver 95%
+            </option>
+
+            <option value="90%">
+                Silver 90%
+            </option>
+
+        `;
+
     }
 
-    return number;
+    else {
+
+        purity.innerHTML = `
+
+            <option value="22K">
+                Gold 22K
+            </option>
+
+            <option value="18K">
+                Gold 18K
+            </option>
+
+        `;
+
+    }
+
+
+    calculateRow(row);
+
 }
 
 
-function calculateBill() {
+// =====================================================
+// CALCULATE SINGLE ITEM
+// =====================================================
 
-    const rows = document.querySelectorAll("#billItems tr");
+function calculateRow(row) {
+
+    const metal =
+        row.querySelector(".metal")?.value || "Gold";
+
+    const purity =
+        row.querySelector(".purity")?.value || "";
+
+    const netWeight =
+        parseFloat(
+            row.querySelector(".net-weight")?.value
+        ) || 0;
+
+    const rate =
+        parseFloat(
+            row.querySelector(".rate")?.value
+        ) || 0;
+
+    const makingPerGram =
+        parseFloat(
+            row.querySelector(".making")?.value
+        ) || 0;
+
+
+    let purityMultiplier = 1;
+
+
+    // ============================================
+    // SILVER PURITY
+    // ============================================
+
+    if (metal === "Silver") {
+
+        if (purity === "100%") {
+
+            purityMultiplier = 1;
+
+        }
+
+        else if (purity === "95%") {
+
+            purityMultiplier = 0.95;
+
+        }
+
+        else if (purity === "90%") {
+
+            purityMultiplier = 0.90;
+
+        }
+
+    }
+
+
+    // ============================================
+    // METAL AMOUNT
+    // ============================================
+
+    const metalAmount =
+        netWeight *
+        rate *
+        purityMultiplier;
+
+
+    // ============================================
+    // MAKING PER GRAM
+    // ============================================
+
+    const makingAmount =
+        netWeight *
+        makingPerGram;
+
+
+    // ============================================
+    // ITEM TOTAL
+    // ============================================
+
+    const itemTotal =
+        metalAmount +
+        makingAmount;
+
+
+    const amountField =
+        row.querySelector(".amount");
+
+
+    if (amountField) {
+
+        amountField.value =
+            itemTotal.toFixed(2);
+
+    }
+
+
+    calculateBillTotal();
+
+}
+
+
+// =====================================================
+// BILL TOTAL
+// =====================================================
+
+function calculateBillTotal() {
 
     let subtotal = 0;
 
-    rows.forEach(function (row) {
 
-        const netWeightInput = row.querySelector(".net-weight");
-        const rateInput = row.querySelector(".rate");
-        const makingInput = row.querySelector(".making");
-        const amountCell = row.querySelector(".row-amount");
+    document
+        .querySelectorAll(".amount")
+        .forEach(function (field) {
 
-        if (!netWeightInput || !rateInput || !makingInput || !amountCell) {
-            return;
-        }
+            subtotal +=
+                parseFloat(field.value) || 0;
 
-        const netWeight = getNumber(netWeightInput.value);
-        const rate = getNumber(rateInput.value);
-        const making = getNumber(makingInput.value);
-
-        const goldValue = netWeight * rate;
-        const amount = goldValue + making;
-
-        subtotal += amount;
-
-        amountCell.innerText = "₹" + amount.toFixed(2);
-        amountCell.dataset.amount = amount.toFixed(2);
-    });
+        });
 
 
-    const discountInput = document.getElementById("discount");
+    const discount =
+        parseFloat(
+            document.getElementById("discount")?.value
+        ) || 0;
 
-    const discount = discountInput
-        ? getNumber(discountInput.value)
-        : 0;
+
+    const gstPercent =
+        parseFloat(
+            document.getElementById("gst_percent")?.value
+        ) || 0;
 
 
-    let taxableAmount = subtotal - discount;
+    let taxableAmount =
+        subtotal - discount;
+
 
     if (taxableAmount < 0) {
+
         taxableAmount = 0;
+
     }
 
 
-    const gst = taxableAmount * 0.03;
+    const gstAmount =
+        taxableAmount *
+        gstPercent /
+        100;
 
-    const grandTotal = taxableAmount + gst;
+
+    const grandTotal =
+        taxableAmount +
+        gstAmount;
 
 
-    document.getElementById("subtotal").innerText =
-        subtotal.toFixed(2);
+    const subtotalField =
+        document.getElementById("subtotal");
 
-    document.getElementById("gst").innerText =
-        gst.toFixed(2);
+    const gstField =
+        document.getElementById("gst");
 
-    document.getElementById("grandTotal").innerText =
-        grandTotal.toFixed(2);
+    const grandTotalField =
+        document.getElementById("grand_total");
+
+
+    if (subtotalField) {
+
+        subtotalField.value =
+            subtotal.toFixed(2);
+
+    }
+
+
+    if (gstField) {
+
+        gstField.value =
+            gstAmount.toFixed(2);
+
+    }
+
+
+    if (grandTotalField) {
+
+        grandTotalField.value =
+            grandTotal.toFixed(2);
+
+    }
 
 
     calculateBalance();
+
 }
 
+
+// =====================================================
+// BALANCE
+// =====================================================
 
 function calculateBalance() {
 
     const grandTotal =
-        getNumber(
-            document.getElementById("grandTotal").innerText
-        );
+        parseFloat(
+            document.getElementById("grand_total")?.value
+        ) || 0;
+
 
     const amountPaid =
-        getNumber(
-            document.getElementById("amountPaid").value
-        );
+        parseFloat(
+            document.getElementById("amount_paid")?.value
+        ) || 0;
 
-    let balance = grandTotal - amountPaid;
+
+    let balance =
+        grandTotal - amountPaid;
+
 
     if (balance < 0) {
+
         balance = 0;
+
     }
 
-    document.getElementById("balanceDue").innerText =
-        balance.toFixed(2);
+
+    const balanceField =
+        document.getElementById("balance");
+
+
+    if (balanceField) {
+
+        balanceField.value =
+            balance.toFixed(2);
+
+    }
+
 }
 
 
-function addItem() {
+// =====================================================
+// ADD NEW ITEM ROW
+// =====================================================
 
-    const tbody = document.getElementById("billItems");
+function addRow() {
 
-    const row = document.createElement("tr");
+    const body =
+        document.getElementById("itemsBody");
+
+
+    const row =
+        document.createElement("tr");
+
+
+    row.className = "item-row";
+
 
     row.innerHTML = `
 
         <td>
+
             <input
                 type="text"
                 class="item-name"
-                placeholder="Item Name"
+                placeholder="Ring / Chain"
             >
+
         </td>
+
 
         <td>
 
-            <select class="purity">
+            <select
+                class="metal"
+                onchange="metalChanged(this)"
+            >
 
-                <option value="22K">
-                    22K
-                </option>
-
-                <option value="18K">
-                    18K
-                </option>
-
-                <option value="24K">
-                    24K
+                <option value="Gold">
+                    Gold
                 </option>
 
                 <option value="Silver">
@@ -154,224 +379,311 @@ function addItem() {
 
         </td>
 
+
+        <td>
+
+            <select
+                class="purity"
+                onchange="calculateRow(this.closest('tr'))"
+            >
+
+                <option value="22K">
+                    Gold 22K
+                </option>
+
+                <option value="18K">
+                    Gold 18K
+                </option>
+
+            </select>
+
+        </td>
+
+
         <td>
 
             <input
                 type="number"
                 class="gross-weight"
+                placeholder="Optional"
                 step="0.001"
                 min="0"
-                placeholder="Optional"
             >
 
         </td>
+
 
         <td>
 
             <input
                 type="number"
                 class="net-weight"
+                placeholder="0.000"
                 step="0.001"
                 min="0"
-                placeholder="0.000"
-                oninput="calculateBill()"
+                oninput="calculateRow(this.closest('tr'))"
             >
 
         </td>
+
 
         <td>
 
             <input
                 type="number"
                 class="rate"
+                placeholder="₹ / gram"
                 step="0.01"
                 min="0"
-                placeholder="₹ Rate"
-                oninput="calculateBill()"
+                oninput="calculateRow(this.closest('tr'))"
             >
 
         </td>
+
 
         <td>
 
             <input
                 type="number"
                 class="making"
+                placeholder="₹ / gram"
                 step="0.01"
                 min="0"
-                value="0"
-                placeholder="₹ Making"
-                oninput="calculateBill()"
+                oninput="calculateRow(this.closest('tr'))"
             >
 
         </td>
 
-        <td class="row-amount">
-            ₹0.00
+
+        <td>
+
+            <input
+                type="number"
+                class="amount"
+                value="0.00"
+                readonly
+            >
+
+        </td>
+
+
+        <td>
+
+            <button
+                type="button"
+                class="remove-btn"
+                onclick="removeRow(this)"
+            >
+                ✕
+            </button>
+
         </td>
 
     `;
 
-    tbody.appendChild(row);
+
+    body.appendChild(row);
+
 }
 
 
+// =====================================================
+// REMOVE ITEM
+// =====================================================
+
+function removeRow(button) {
+
+    const rows =
+        document.querySelectorAll(".item-row");
+
+
+    if (rows.length <= 1) {
+
+        alert(
+            "Kam se kam ek jewellery item hona chahiye."
+        );
+
+        return;
+
+    }
+
+
+    button
+        .closest("tr")
+        .remove();
+
+
+    calculateBillTotal();
+
+}
+
+
+// =====================================================
+// SAVE BILL
+// =====================================================
+
 async function saveBill() {
 
-    calculateBill();
+    const billNo =
+        document
+            .getElementById("bill_no")
+            .value
+            .trim();
 
 
     const customerName =
-        document.getElementById("customerName").value.trim();
+        document
+            .getElementById("customer_name")
+            .value
+            .trim();
+
 
     const customerMobile =
-        document.getElementById("customerMobile").value.trim();
-
-    const billNo =
-        document.getElementById("billNo").value.trim();
+        document
+            .getElementById("customer_mobile")
+            .value
+            .trim();
 
 
     if (!customerName) {
 
-        alert("Customer Name enter kariye.");
-
-        document.getElementById("customerName").focus();
+        alert(
+            "Customer Name enter kariye."
+        );
 
         return;
+
     }
 
 
+    // ===============================================
+    // ITEMS
+    // ===============================================
+
     const items = [];
 
-    const rows =
-        document.querySelectorAll("#billItems tr");
+
+    document
+        .querySelectorAll(".item-row")
+        .forEach(function (row) {
 
 
-    rows.forEach(function (row) {
-
-        const itemNameInput =
-            row.querySelector(".item-name");
-
-        const purityInput =
-            row.querySelector(".purity");
-
-        const grossInput =
-            row.querySelector(".gross-weight");
-
-        const netInput =
-            row.querySelector(".net-weight");
-
-        const rateInput =
-            row.querySelector(".rate");
-
-        const makingInput =
-            row.querySelector(".making");
-
-        const amountCell =
-            row.querySelector(".row-amount");
+            const itemName =
+                row
+                    .querySelector(".item-name")
+                    .value
+                    .trim();
 
 
-        if (!itemNameInput) {
-            return;
-        }
+            if (!itemName) {
+
+                return;
+
+            }
 
 
-        const itemName =
-            itemNameInput.value.trim();
+            const metal =
+                row.querySelector(".metal").value;
 
 
-        if (!itemName) {
-            return;
-        }
+            const purityValue =
+                row.querySelector(".purity").value;
 
 
-        /*
-            IMPORTANT:
-            Gross Weight optional hai.
-
-            Agar blank hai to database me 0 jayega.
-        */
-
-        const grossWeight =
-            grossInput && grossInput.value.trim() !== ""
-                ? getNumber(grossInput.value)
-                : 0;
+            let savedPurity =
+                purityValue;
 
 
-        const item = {
+            if (metal === "Silver") {
 
-            item_name:
-                itemName,
+                savedPurity =
+                    "Silver " +
+                    purityValue;
 
-            purity:
-                purityInput
-                    ? purityInput.value
-                    : "",
-
-            gross_weight:
-                grossWeight,
-
-            net_weight:
-                netInput
-                    ? getNumber(netInput.value)
-                    : 0,
-
-            rate:
-                rateInput
-                    ? getNumber(rateInput.value)
-                    : 0,
-
-            making:
-                makingInput
-                    ? getNumber(makingInput.value)
-                    : 0,
-
-            amount:
-                amountCell
-                    ? getNumber(amountCell.dataset.amount)
-                    : 0
-        };
+            }
 
 
-        items.push(item);
-    });
+            items.push({
+
+                item_name:
+                    itemName,
+
+                purity:
+                    savedPurity,
+
+                gross_weight:
+                    parseFloat(
+                        row.querySelector(".gross-weight").value
+                    ) || 0,
+
+                net_weight:
+                    parseFloat(
+                        row.querySelector(".net-weight").value
+                    ) || 0,
+
+                rate:
+                    parseFloat(
+                        row.querySelector(".rate").value
+                    ) || 0,
+
+                making:
+                    parseFloat(
+                        row.querySelector(".making").value
+                    ) || 0,
+
+                amount:
+                    parseFloat(
+                        row.querySelector(".amount").value
+                    ) || 0
+
+            });
+
+        });
 
 
     if (items.length === 0) {
 
-        alert("Kam se kam ek jewellery item enter kariye.");
+        alert(
+            "Kam se kam ek item enter kariye."
+        );
 
         return;
+
     }
 
 
+    // ===============================================
+    // TOTALS
+    // ===============================================
+
     const subtotal =
-        getNumber(
-            document.getElementById("subtotal").innerText
-        );
+        parseFloat(
+            document.getElementById("subtotal").value
+        ) || 0;
+
 
     const discount =
-        getNumber(
+        parseFloat(
             document.getElementById("discount").value
-        );
+        ) || 0;
+
 
     const gst =
-        getNumber(
-            document.getElementById("gst").innerText
-        );
+        parseFloat(
+            document.getElementById("gst").value
+        ) || 0;
+
 
     const grandTotal =
-        getNumber(
-            document.getElementById("grandTotal").innerText
-        );
+        parseFloat(
+            document.getElementById("grand_total").value
+        ) || 0;
+
 
     const amountPaid =
-        getNumber(
-            document.getElementById("amountPaid").value
-        );
-
-    const paymentMode =
-        document.getElementById("paymentMode").value;
+        parseFloat(
+            document.getElementById("amount_paid").value
+        ) || 0;
 
 
     if (amountPaid > grandTotal) {
@@ -381,8 +693,17 @@ async function saveBill() {
         );
 
         return;
+
     }
 
+
+    const paymentMode =
+        document.getElementById("payment_mode").value;
+
+
+    // ===============================================
+    // JSON
+    // ===============================================
 
     const billData = {
 
@@ -415,8 +736,13 @@ async function saveBill() {
 
         items:
             items
+
     };
 
+
+    // ===============================================
+    // SEND
+    // ===============================================
 
     try {
 
@@ -432,7 +758,9 @@ async function saveBill() {
                     },
 
                     body:
-                        JSON.stringify(billData)
+                        JSON.stringify(
+                            billData
+                        )
                 }
             );
 
@@ -447,13 +775,10 @@ async function saveBill() {
                 "Bill Saved Successfully! ✅"
             );
 
-            /*
-                Save hone ke baad direct
-                final invoice khulega.
-            */
 
             window.location.href =
-                "/bill/" + result.bill_id;
+                "/bill/" +
+                result.bill_id;
 
         }
 
@@ -463,6 +788,7 @@ async function saveBill() {
                 result.message ||
                 "Bill save nahi hua."
             );
+
         }
 
     }
@@ -471,23 +797,11 @@ async function saveBill() {
 
         console.error(error);
 
+
         alert(
-            "Bill save karte waqt error aaya."
-        );
-    }
-}
-
-
-function newBill() {
-
-    const confirmNew =
-        confirm(
-            "Naya bill start karna hai?"
+            "Server se connection nahi ho pa raha."
         );
 
-    if (confirmNew) {
-
-        window.location.href =
-            "/new-bill";
     }
+
 }

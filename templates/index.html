@@ -13,509 +13,306 @@
 
         body {
             margin: 0;
-            padding: 22px;
             font-family: Arial, sans-serif;
             background: #eee8dd;
-            color: #2d1b12;
+            color: #321d12;
         }
 
-        .billing-app {
+        .page {
             max-width: 1250px;
-            margin: auto;
+            margin: 20px auto;
             background: #fffdf8;
-            border: 1px solid #d4b15e;
+            border: 1px solid #d2ae55;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 35px rgba(0,0,0,.15);
         }
 
-        .premium-header {
-            padding: 16px 25px;
-            text-align: center;
+        .header {
+            padding: 15px 25px;
             color: white;
-            background: linear-gradient(135deg, #4d050b, #7e101a, #981d27, #650912);
-            border-bottom: 4px solid #d3aa4d;
+            background: linear-gradient(
+                135deg,
+                #4b050b,
+                #781019,
+                #971d27,
+                #600810
+            );
+            border-bottom: 4px solid #d6b050;
         }
 
-        .ram-line {
-            color: #f0cf72;
-            font-family: Georgia, serif;
+        .jai {
+            text-align: center;
+            color: #f0cf73;
             font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
-        .header-content {
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 22px;
+            gap: 18px;
         }
 
-        .logo-box {
-            width: 125px;
-            height: 100px;
-            background: #fffaf0;
-            border: 2px solid #dfbb60;
-            border-radius: 10px;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-box img {
-            max-width: 100%;
-            max-height: 100%;
+        .logo {
+            width: 105px;
+            height: 95px;
             object-fit: contain;
-        }
-
-        .shop-info {
-            text-align: left;
         }
 
         .shop-name {
             margin: 0;
-            color: #fff5d7;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 39px;
+            font-size: 31px;
+            color: #fff4d2;
         }
 
-        .established {
-            color: #edcf75;
-            font-size: 13px;
+        .est {
+            margin-top: 4px;
+            color: #edce72;
+            font-size: 11px;
             font-weight: bold;
-            margin-top: 4px;
         }
 
-        .service-strip {
-            display: inline-block;
+        .shop-info {
             margin-top: 7px;
-            padding: 5px 16px;
-            border: 1px solid #ddb85c;
-            border-radius: 20px;
-            color: #fff5d3;
-            font-size: 12px;
+            color: #f8e8bf;
+            font-size: 11px;
+            line-height: 1.6;
         }
 
-        .owners {
-            margin-top: 8px;
-            font-size: 12px;
-            color: #fff7e3;
-        }
-
-        .address {
-            margin-top: 4px;
-            color: #f0d47f;
-            font-size: 12px;
-        }
-
-        .shop-phone {
-            margin-top: 4px;
-            color: #fff7df;
-            font-size: 12px;
+        .back-btn {
+            text-decoration: none;
+            background: #fff0cd;
+            color: #761018;
+            padding: 10px 15px;
+            border-radius: 7px;
             font-weight: bold;
         }
 
         .content {
-            padding: 20px 25px 22px;
+            padding: 24px;
         }
 
-        .section-title {
-            color: #75101a;
+        .title {
+            color: #781019;
+            margin: 0 0 18px;
             font-family: Georgia, serif;
-            font-size: 18px;
-            margin: 5px 0 10px;
         }
 
-        .customer-card {
+        .customer-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 9px;
-            padding: 12px;
-            margin-bottom: 17px;
-            background: #fffaf0;
-            border: 1px solid #d7b667;
-            border-radius: 8px;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            color: #6b5137;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
         input,
         select {
             width: 100%;
-            padding: 9px 10px;
-            border: 1px solid #d5bc88;
-            border-radius: 5px;
-            background: white;
-            font-size: 13px;
+            padding: 10px;
+            border: 1px solid #ceb274;
+            border-radius: 6px;
             outline: none;
+            background: #fffefa;
         }
 
         input:focus,
         select:focus {
-            border-color: #8a1520;
-            box-shadow: 0 0 0 2px rgba(138,21,32,0.08);
+            border-color: #7b101a;
         }
 
-        .optional-note {
-            display: block;
-            margin-top: 3px;
-            font-size: 9px;
-            color: #8b6b43;
-        }
-
-        .table-wrapper {
+        .table-wrap {
             overflow-x: auto;
-            border: 1px solid #d4b15e;
-            border-radius: 7px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1050px;
         }
 
         th {
-            background: #7b101a;
-            color: #fff4d0;
-            padding: 9px 5px;
-            font-size: 13px;
-            border-right: 1px solid #c99d42;
+            background: #781019;
+            color: #fff4d2;
+            padding: 10px 6px;
+            font-size: 11px;
+            border: 1px solid #a56155;
         }
 
         td {
             padding: 6px;
-            text-align: center;
-            border-right: 1px solid #eadbb8;
-            border-bottom: 1px solid #eadbb8;
+            border: 1px solid #dfcfaa;
         }
 
         td input,
         td select {
-            padding: 7px;
+            padding: 8px 6px;
+            font-size: 12px;
         }
 
-        .btn {
-            border: none;
-            padding: 9px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 13px;
+        .amount {
+            background: #f8eed7;
             font-weight: bold;
         }
 
-        .btn-maroon {
+        .remove-btn {
+            border: none;
+            background: #941d28;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 8px 11px;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            margin-top: 10px;
+            border: none;
             background: #7b101a;
             color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        .btn-gold {
-            background: #d9b454;
-            color: #3d2507;
-        }
-
-        .btn-light {
-            background: #f5ecd9;
-            color: #721019;
-            border: 1px solid #d6b66d;
-        }
-
-        .add-area {
-            margin-top: 9px;
-        }
-
-        .bill-bottom {
+        .bottom-grid {
+            margin-top: 25px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-top: 17px;
+            grid-template-columns: 1fr 420px;
+            gap: 30px;
         }
 
-        .payment-card,
-        .total-card {
-            border: 1px solid #d5b467;
-            border-radius: 8px;
-            background: #fffaf1;
-            padding: 13px;
+        .box {
+            border: 1px solid #d6bb7b;
+            background: #fffaf0;
+            padding: 18px;
+            border-radius: 10px;
         }
 
-        .payment-card h3,
-        .total-card h3 {
-            margin: 0 0 10px;
-            color: #75101a;
+        .box h3 {
+            margin: 0 0 15px;
+            color: #781019;
             font-family: Georgia, serif;
-            font-size: 17px;
         }
 
         .payment-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 9px;
+            gap: 12px;
         }
 
-        .payment-field label {
-            display: block;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 4px;
-            color: #684729;
-        }
-
-        .balance-box {
-            margin-top: 9px;
-            padding: 9px 10px;
-            display: flex;
-            justify-content: space-between;
-            background: #fff3d7;
-            border: 1px solid #d8b65f;
-            border-radius: 5px;
-            color: #8a111b;
-            font-weight: bold;
-        }
-
-        .total-line {
-            min-height: 37px;
+        .summary-row {
             display: grid;
-            grid-template-columns: 1fr 145px;
+            grid-template-columns: 1fr 150px;
             align-items: center;
-            border-bottom: 1px solid #e0cfaa;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        .total-line span:last-child {
-            text-align: right;
+        .summary-row span {
+            font-size: 12px;
             font-weight: bold;
         }
 
-        .discount-box {
-            width: 120px;
-            margin-left: auto;
+        .grand {
+            padding-top: 10px;
+            margin-top: 10px;
+            border-top: 2px solid #7b101a;
         }
 
-        .grand-total {
-            margin-top: 8px;
-            padding: 11px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #7b101a;
-            color: white;
-            border: 2px solid #d3aa4d;
-            border-radius: 6px;
-            font-family: Georgia, serif;
-            font-size: 19px;
+        .grand span {
+            color: #781019;
+            font-size: 16px;
+        }
+
+        .grand input {
+            font-size: 17px;
             font-weight: bold;
+            color: #781019;
+            background: #fff1cb;
         }
 
-        .action-bar {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 18px;
-            padding-top: 15px;
-            border-top: 1px solid #dbc28c;
+        .save-btn {
+            width: 100%;
+            border: none;
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #651019, #971d28);
+            color: #fff3d1;
+        }
+
+        .formula-note {
+            margin-top: 15px;
+            background: #fff4db;
+            border-left: 4px solid #b89034;
+            padding: 10px 12px;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #674c31;
         }
 
         .footer {
+            margin-top: 25px;
+            padding-top: 14px;
+            border-top: 1px solid #d9c28b;
             text-align: center;
-            color: #7b101a;
-            font-family: Georgia, serif;
+            color: #781019;
             font-weight: bold;
             font-size: 13px;
-            margin-top: 14px;
-            padding-top: 9px;
-            border-top: 1px solid #d7b76f;
         }
 
-        @media(max-width: 850px) {
-            .customer-card {
+        @media(max-width: 900px) {
+            .customer-grid {
                 grid-template-columns: 1fr 1fr;
             }
 
-            .bill-bottom {
+            .bottom-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .header-content {
-                flex-direction: column;
-            }
-
-            .shop-info {
-                text-align: center;
             }
         }
 
-        @media print {
-
-            @page {
-                size: A4 portrait;
-                margin: 7mm;
+        @media(max-width: 600px) {
+            .page {
+                margin: 0;
+                border-radius: 0;
             }
 
-            html,
-            body {
-                margin: 0 !important;
-                padding: 0 !important;
-                background: white !important;
+            .header-main {
+                flex-direction: column;
+                text-align: center;
             }
 
-            body {
-                font-size: 11px !important;
+            .brand {
+                flex-direction: column;
             }
 
-            .billing-app {
-                width: 100% !important;
-                max-width: none !important;
-                margin: 0 !important;
-                border: 2px solid #c79d46 !important;
-                border-radius: 0 !important;
-                box-shadow: none !important;
-                min-height: 270mm;
-            }
-
-            .premium-header {
-                padding: 10px 15px 11px !important;
-                border-bottom: 3px solid #d3aa4d !important;
-            }
-
-            .ram-line {
-                font-size: 12px !important;
-                margin-bottom: 4px !important;
-            }
-
-            .header-content {
-                gap: 12px !important;
-            }
-
-            .logo-box {
-                width: 90px !important;
-                height: 78px !important;
-                padding: 3px !important;
-            }
-
-            .shop-name {
-                font-size: 29px !important;
-            }
-
-            .established {
-                font-size: 10px !important;
-            }
-
-            .service-strip {
-                padding: 3px 10px !important;
-                font-size: 9px !important;
-            }
-
-            .owners,
-            .address,
-            .shop-phone {
-                font-size: 9px !important;
+            .customer-grid,
+            .payment-grid {
+                grid-template-columns: 1fr;
             }
 
             .content {
-                padding: 10px 12px !important;
-            }
-
-            .section-title {
-                font-size: 14px !important;
-                margin: 6px 0 7px !important;
-            }
-
-            .customer-card {
-                padding: 7px !important;
-                gap: 6px !important;
-                margin-bottom: 10px !important;
-            }
-
-            input,
-            select {
-                padding: 6px 7px !important;
-                min-height: 29px !important;
-                font-size: 10px !important;
-            }
-
-            th {
-                padding: 7px 3px !important;
-                font-size: 10px !important;
-            }
-
-            td {
-                padding: 4px 3px !important;
-            }
-
-            td input,
-            td select {
-                padding: 4px !important;
-                min-height: 27px !important;
-                font-size: 9px !important;
-            }
-
-            .optional-note {
-                font-size: 7px !important;
-            }
-
-            .add-area {
-                display: none !important;
-            }
-
-            .bill-bottom {
-                grid-template-columns: 1fr 1fr !important;
-                gap: 10px !important;
-                margin-top: 12px !important;
-            }
-
-            .payment-card,
-            .total-card {
-                padding: 9px !important;
-            }
-
-            .payment-card h3,
-            .total-card h3 {
-                font-size: 13px !important;
-                margin-bottom: 7px !important;
-            }
-
-            .payment-field label {
-                font-size: 9px !important;
-            }
-
-            .balance-box {
-                padding: 7px !important;
-                font-size: 10px !important;
-            }
-
-            .total-line {
-                min-height: 32px !important;
-                grid-template-columns: 1fr 105px !important;
-                font-size: 10px !important;
-            }
-
-            .discount-box {
-                width: 90px !important;
-            }
-
-            .grand-total {
-                padding: 8px !important;
-                font-size: 14px !important;
-            }
-
-            .action-bar {
-                display: none !important;
-            }
-
-            .footer {
-                margin-top: 12px !important;
-                font-size: 11px !important;
-            }
-
-            .premium-header,
-            .customer-card,
-            .table-wrapper,
-            .bill-bottom,
-            .payment-card,
-            .total-card,
-            .footer {
-                break-inside: avoid !important;
-                page-break-inside: avoid !important;
+                padding: 15px;
             }
         }
     </style>
@@ -523,181 +320,245 @@
 
 <body>
 
-<div class="billing-app">
+<div class="page">
 
-    <div class="premium-header">
+    <div class="header">
 
-        <div class="ram-line">
+        <div class="jai">
             || जय श्री राम ||
         </div>
 
-        <div class="header-content">
+        <div class="header-main">
 
-            <div class="logo-box">
+            <div class="brand">
+
                 <img
+                    class="logo"
                     src="{{ url_for('static', filename='images/shop-logo.png') }}"
                     alt="Shop Logo"
                 >
-            </div>
 
-            <div class="shop-info">
+                <div>
 
-                <h1 class="shop-name">
-                    श्री राम कुमार ज्वैलर्स
-                </h1>
+                    <h1 class="shop-name">
+                        श्री राम कुमार ज्वैलर्स
+                    </h1>
 
-                <div class="established">
-                    ESTABLISHED 1992
+                    <div class="est">
+                        ESTABLISHED 1992
+                    </div>
+
+                    <div class="shop-info">
+                        Proprietors: Rajesh Kumar Soni | Umesh Kumar Soni
+                        <br>
+                        Harraipur Alamchand, Kaushambi
+                    </div>
+
                 </div>
 
-                <div class="service-strip">
-                    GOLD • SILVER • JEWELLERY
-                </div>
-
             </div>
 
-        </div>
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="back-btn"
+            >
+                ← Dashboard
+            </a>
 
-        <div class="owners">
-            Proprietors:
-            <strong>Rajesh Kumar Soni</strong>
-            &nbsp; | &nbsp;
-            <strong>Umesh Kumar Soni</strong>
-        </div>
-
-        <div class="address">
-            Harraipur Alamchand, Kaushambi
-        </div>
-
-        <div class="shop-phone">
-            ☎ 9935850807 &nbsp; | &nbsp; 9935256605
         </div>
 
     </div>
 
+
     <div class="content">
 
-        <h2 class="section-title">Customer & Bill Details</h2>
+        <h2 class="title">
+            Create New Bill
+        </h2>
 
-        <div class="customer-card">
 
-            <input
-                type="text"
-                id="customerName"
-                placeholder="Customer Name"
-            >
+        <!-- CUSTOMER DETAILS -->
 
-            <input
-                type="text"
-                id="customerMobile"
-                placeholder="Mobile Number"
-            >
+        <div class="customer-grid">
 
-            <input
-                type="text"
-                id="billNo"
-                value="{{ bill_no }}"
-                readonly
-            >
+            <div>
+                <label>Customer Name *</label>
 
-            <input
-                type="date"
-                id="billDate"
-            >
+                <input
+                    type="text"
+                    id="customer_name"
+                    placeholder="Customer Name"
+                >
+            </div>
+
+
+            <div>
+                <label>Mobile Number</label>
+
+                <input
+                    type="text"
+                    id="customer_mobile"
+                    placeholder="Mobile Number"
+                    maxlength="10"
+                >
+            </div>
+
+
+            <div>
+                <label>Bill Number</label>
+
+                <input
+                    type="text"
+                    id="bill_no"
+                    value="{{ bill_no }}"
+                    readonly
+                >
+            </div>
+
+
+            <div>
+                <label>Date</label>
+
+                <input
+                    type="date"
+                    id="bill_date"
+                >
+            </div>
 
         </div>
 
-        <h2 class="section-title">Jewellery Details</h2>
 
-        <div class="table-wrapper">
+        <!-- JEWELLERY TABLE -->
+
+        <div class="table-wrap">
 
             <table>
 
                 <thead>
                 <tr>
                     <th>Item</th>
+                    <th>Metal</th>
                     <th>Purity</th>
-
-                    <th>
-                        Gross Weight
-                        <span class="optional-note">Optional</span>
-                    </th>
-
-                    <th>Net Weight</th>
-                    <th>Rate</th>
-                    <th>Making</th>
-                    <th>Amount</th>
+                    <th>Gross Wt.</th>
+                    <th>Net Wt.</th>
+                    <th>Rate ₹/g</th>
+                    <th>Making ₹/g</th>
+                    <th>Amount ₹</th>
+                    <th>Remove</th>
                 </tr>
                 </thead>
 
-                <tbody id="billItems">
+                <tbody id="itemsBody">
 
-                <tr>
+                <tr class="item-row">
 
                     <td>
                         <input
                             type="text"
                             class="item-name"
-                            placeholder="Item Name"
+                            placeholder="Ring / Chain"
                         >
                     </td>
 
+
                     <td>
-                        <select class="purity">
-                            <option value="22K">22K</option>
-                            <option value="18K">18K</option>
-                            <option value="24K">24K</option>
+
+                        <select
+                            class="metal"
+                            onchange="metalChanged(this)"
+                        >
+                            <option value="Gold">Gold</option>
                             <option value="Silver">Silver</option>
-                             <option value="Silver 50%">Silver 50%</option>
                         </select>
+
                     </td>
+
+
+                    <td>
+
+                        <select
+                            class="purity"
+                            onchange="calculateRow(this.closest('tr'))"
+                        >
+
+                            <option value="22K">
+                                Gold 22K
+                            </option>
+
+                            <option value="18K">
+                                Gold 18K
+                            </option>
+
+                        </select>
+
+                    </td>
+
 
                     <td>
                         <input
                             type="number"
                             class="gross-weight"
+                            placeholder="Optional"
                             step="0.001"
                             min="0"
-                            placeholder="Optional"
                         >
                     </td>
+
 
                     <td>
                         <input
                             type="number"
                             class="net-weight"
+                            placeholder="0.000"
                             step="0.001"
                             min="0"
-                            placeholder="0.000"
-                            oninput="calculateBill()"
+                            oninput="calculateRow(this.closest('tr'))"
                         >
                     </td>
+
 
                     <td>
                         <input
                             type="number"
                             class="rate"
+                            placeholder="₹ / gram"
                             step="0.01"
                             min="0"
-                            placeholder="₹ Rate"
-                            oninput="calculateBill()"
+                            oninput="calculateRow(this.closest('tr'))"
                         >
                     </td>
+
 
                     <td>
                         <input
                             type="number"
                             class="making"
+                            placeholder="₹ / gram"
                             step="0.01"
                             min="0"
-                            value="0"
-                            placeholder="₹ Making"
-                            oninput="calculateBill()"
+                            oninput="calculateRow(this.closest('tr'))"
                         >
                     </td>
 
-                    <td class="row-amount">
-                        ₹0.00
+
+                    <td>
+                        <input
+                            type="number"
+                            class="amount"
+                            value="0.00"
+                            readonly
+                        >
+                    </td>
+
+
+                    <td>
+                        <button
+                            type="button"
+                            class="remove-btn"
+                            onclick="removeRow(this)"
+                        >
+                            ✕
+                        </button>
                     </td>
 
                 </tr>
@@ -708,174 +569,202 @@
 
         </div>
 
-        <div class="add-area">
 
-            <button
-                type="button"
-                class="btn btn-gold"
-                onclick="addItem()"
-            >
-                + Add Jewellery Item
-            </button>
+        <button
+            type="button"
+            class="add-btn"
+            onclick="addRow()"
+        >
+            + Add Jewellery Item
+        </button>
+
+
+        <div class="formula-note">
+
+            <strong>Silver Calculation:</strong>
+
+            100% = Weight × Rate,
+            95% = Weight × Rate × 0.95,
+            90% = Weight × Rate × 0.90.
+
+            <br>
+
+            <strong>Making:</strong>
+
+            Net Weight × Making Rate per gram.
 
         </div>
 
-        <div class="bill-bottom">
 
-            <div class="payment-card">
+        <!-- BOTTOM -->
+
+        <div class="bottom-grid">
+
+
+            <!-- PAYMENT -->
+
+            <div class="box">
 
                 <h3>Payment Details</h3>
 
                 <div class="payment-grid">
 
-                    <div class="payment-field">
-
+                    <div>
                         <label>Payment Mode</label>
 
-                        <select id="paymentMode">
+                        <select id="payment_mode">
                             <option value="Cash">Cash</option>
                             <option value="UPI">UPI</option>
                             <option value="Card">Card</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                            <option value="Credit/Udhaar">Credit / Udhaar</option>
+                            <option value="Bank Transfer">
+                                Bank Transfer
+                            </option>
                         </select>
-
                     </div>
 
-                    <div class="payment-field">
 
-                        <label>Amount Paid</label>
+                    <div>
+                        <label>Amount Paid ₹</label>
 
                         <input
                             type="number"
-                            id="amountPaid"
-                            step="0.01"
-                            min="0"
+                            id="amount_paid"
                             value="0"
+                            min="0"
+                            step="0.01"
                             oninput="calculateBalance()"
                         >
-
                     </div>
 
-                </div>
 
-                <div class="balance-box">
+                    <div>
+                        <label>Balance / Due ₹</label>
 
-                    <span>Balance / Due</span>
-
-                    <span>
-                        ₹<span id="balanceDue">0.00</span>
-                    </span>
+                        <input
+                            type="number"
+                            id="balance"
+                            value="0.00"
+                            readonly
+                        >
+                    </div>
 
                 </div>
 
             </div>
 
-            <div class="total-card">
+
+            <!-- BILL SUMMARY -->
+
+            <div class="box">
 
                 <h3>Bill Summary</h3>
 
-                <div class="total-line">
+
+                <div class="summary-row">
+
                     <span>Subtotal</span>
-                    <span>₹<span id="subtotal">0.00</span></span>
-                </div>
 
-                <div class="total-line">
-
-                    <span>Discount</span>
-
-                    <span>
-                        <input
-                            class="discount-box"
-                            type="number"
-                            id="discount"
-                            value="0"
-                            min="0"
-                            step="0.01"
-                            oninput="calculateBill()"
-                        >
-                    </span>
+                    <input
+                        type="number"
+                        id="subtotal"
+                        value="0.00"
+                        readonly
+                    >
 
                 </div>
 
-                <div class="total-line">
-                    <span>GST</span>
-                    <span>₹<span id="gst">0.00</span></span>
+
+                <div class="summary-row">
+
+                    <span>Discount ₹</span>
+
+                    <input
+                        type="number"
+                        id="discount"
+                        value="0"
+                        min="0"
+                        step="0.01"
+                        oninput="calculateBillTotal()"
+                    >
+
                 </div>
 
-                <div class="grand-total">
 
-                    <span>GRAND TOTAL</span>
+                <div class="summary-row">
 
-                    <span>
-                        ₹<span id="grandTotal">0.00</span>
-                    </span>
+                    <span>GST Rate</span>
+
+                    <select
+                        id="gst_percent"
+                        onchange="calculateBillTotal()"
+                    >
+
+                        <option value="0">
+                            0%
+                        </option>
+
+                        <option value="2">
+                            2%
+                        </option>
+
+                        <option value="3" selected>
+                            3%
+                        </option>
+
+                    </select>
 
                 </div>
+
+
+                <div class="summary-row">
+
+                    <span>GST Amount ₹</span>
+
+                    <input
+                        type="number"
+                        id="gst"
+                        value="0.00"
+                        readonly
+                    >
+
+                </div>
+
+
+                <div class="summary-row grand">
+
+                    <span>Grand Total</span>
+
+                    <input
+                        type="number"
+                        id="grand_total"
+                        value="0.00"
+                        readonly
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="save-btn"
+                    onclick="saveBill()"
+                >
+                    SAVE BILL
+                </button>
 
             </div>
 
         </div>
 
-        <div class="action-bar">
-
-            <button
-                type="button"
-                class="btn btn-maroon"
-                onclick="saveBill()"
-            >
-                💾 Save Bill
-            </button>
-
-            <button
-                type="button"
-                class="btn btn-gold"
-                onclick="window.print()"
-            >
-                🖨 Print
-            </button>
-
-            <button
-                type="button"
-                class="btn btn-light"
-                onclick="newBill()"
-            >
-                + New Bill
-            </button>
-
-            <button
-                type="button"
-                class="btn btn-light"
-                onclick="window.location.href='/bills'"
-            >
-                Bill History
-            </button>
-
-            <button
-                type="button"
-                class="btn btn-light"
-                onclick="window.location.href='/customers'"
-            >
-                Customer Khata
-            </button>
-
-            <button
-                type="button"
-                class="btn btn-light"
-                onclick="window.location.href='/'"
-            >
-                Dashboard
-            </button>
-
-        </div>
 
         <div class="footer">
-            ◆ शुद्धता हमारी पहचान • विश्वास आपका ◆
+            !! शुद्धता हमारी पहचान, विश्वास आपका !!
         </div>
 
     </div>
 
 </div>
+
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 

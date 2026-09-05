@@ -1,628 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        {{ bill["bill_no"] }} - Invoice
-    </title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 18px;
-            background: #e9e5df;
-            font-family: Arial, sans-serif;
-            color: #2d1b12;
-        }
-
-        .invoice {
-            width: 210mm;
-            min-height: 280mm;
-            margin: auto;
-            padding: 8mm;
-
-            background: #fffdf7;
-
-            border: 3px double #b7892d;
-
-            box-shadow:
-                0 8px 30px rgba(0,0,0,0.16);
-        }
-
-        .top-text {
-            text-align: center;
-            color: #7b101a;
-            font-family: Georgia, serif;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .header {
-            display: grid;
-            grid-template-columns: 115px 1fr 120px;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-box {
-            text-align: center;
-        }
-
-        .logo-box img {
-            width: 105px;
-            max-height: 82px;
-            object-fit: contain;
-        }
-
-        .shop-center {
-            text-align: center;
-        }
-
-        .shop-name {
-            margin: 0;
-            font-family: Georgia, serif;
-            color: #7b101a;
-            font-size: 32px;
-        }
-
-        .established {
-            margin-top: 3px;
-            color: #a67b26;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .service-strip {
-            display: inline-block;
-            margin-top: 5px;
-            padding: 4px 14px;
-            background: #7b101a;
-            color: #fff4cf;
-            border-radius: 20px;
-            font-size: 10px;
-        }
-
-        .header-right {
-            text-align: right;
-            font-size: 10px;
-            line-height: 1.6;
-        }
-
-        .owners {
-            text-align: center;
-            margin-top: 6px;
-            font-size: 11px;
-        }
-
-        .contact {
-            text-align: center;
-            margin-top: 4px;
-            padding-bottom: 6px;
-            font-size: 10px;
-            border-bottom: 1px solid #c9a24f;
-        }
-
-        .invoice-title {
-            text-align: center;
-            margin: 9px 0;
-        }
-
-        .invoice-title span {
-            display: inline-block;
-            padding: 5px 28px;
-
-            background: #7b101a;
-            color: white;
-
-            border: 2px solid #cda447;
-            border-radius: 4px;
-
-            font-family: Georgia, serif;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-
-            border: 1px solid #c5a05b;
-            border-radius: 5px;
-
-            overflow: hidden;
-
-            font-size: 11px;
-        }
-
-        .detail-side {
-            padding: 7px 11px;
-        }
-
-        .detail-side:first-child {
-            border-right: 1px solid #c5a05b;
-        }
-
-        .line {
-            display: flex;
-            margin: 5px 0;
-        }
-
-        .label {
-            width: 100px;
-            font-weight: bold;
-            color: #721019;
-        }
-
-        .value {
-            flex: 1;
-            border-bottom: 1px dotted #aa8b59;
-        }
-
-        .items {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 10px;
-        }
-
-        .items th {
-            background: #7b101a;
-            color: #fff4d0;
-
-            padding: 6px 3px;
-
-            border: 1px solid #ba8c32;
-        }
-
-        .items td {
-            border: 1px solid #d0ad68;
-
-            padding: 6px 3px;
-
-            text-align: center;
-        }
-
-        .items td:nth-child(2) {
-            text-align: left;
-        }
-
-        .summary {
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-
-            gap: 12px;
-
-            margin-top: 10px;
-        }
-
-        .note {
-            border: 1px solid #c5a05b;
-            border-radius: 5px;
-            padding: 9px;
-            font-size: 10px;
-        }
-
-        .note h4 {
-            margin: 0 0 6px;
-            color: #721019;
-        }
-
-        .totals {
-            border: 1px solid #c5a05b;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .total-row {
-            display: grid;
-            grid-template-columns: 1fr 125px;
-
-            border-bottom: 1px solid #dec48d;
-
-            font-size: 10px;
-        }
-
-        .total-row div {
-            padding: 7px 9px;
-        }
-
-        .total-row div:last-child {
-            text-align: right;
-            border-left: 1px solid #dec48d;
-            font-weight: bold;
-        }
-
-        .grand {
-            background: #7b101a;
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .payment-title {
-            margin: 9px 0 5px;
-
-            color: #721019;
-            font-family: Georgia, serif;
-            font-weight: bold;
-        }
-
-        .payment {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-
-            border: 1px solid #c5a05b;
-            border-radius: 5px;
-
-            overflow: hidden;
-
-            text-align: center;
-        }
-
-        .payment-box {
-            padding: 7px 5px;
-            border-right: 1px solid #dec48d;
-        }
-
-        .payment-box:last-child {
-            border-right: none;
-        }
-
-        .payment-box small {
-            display: block;
-            color: #785c3d;
-            font-size: 8px;
-        }
-
-        .payment-box strong {
-            display: block;
-            margin-top: 3px;
-            font-size: 13px;
-        }
-
-        .due {
-            color: #b10d19;
-        }
-
-        .payment-history {
-            margin-top: 8px;
-        }
-
-        .payment-history h4 {
-            color: #721019;
-            margin: 0 0 5px;
-        }
-
-        .payment-history table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 9px;
-        }
-
-        .payment-history th,
-        .payment-history td {
-            border: 1px solid #d4b16b;
-            padding: 4px;
-            text-align: center;
-        }
-
-        .payment-history th {
-            background: #f5e7c5;
-            color: #721019;
-        }
-
-        .footer {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 16px;
-            margin-top: 10px;
-        }
-
-        .terms {
-            border: 1px solid #c5a05b;
-            border-radius: 5px;
-            padding: 8px;
-            font-size: 8px;
-        }
-
-        .terms h4 {
-            margin: 0 0 4px;
-            color: #721019;
-        }
-
-        .terms p {
-            margin: 3px 0;
-        }
-
-        .signature {
-            text-align: center;
-            padding-top: 6px;
-            font-size: 10px;
-        }
-
-        .signature strong {
-            color: #721019;
-        }
-
-        .signature-line {
-            border-top: 1px solid #333;
-            width: 180px;
-            margin: 35px auto 4px;
-        }
-
-        .slogan {
-            text-align: center;
-            color: #7b101a;
-            font-family: Georgia, serif;
-            font-weight: bold;
-            font-size: 11px;
-            margin-top: 8px;
-            padding-top: 5px;
-            border-top: 1px solid #c9a24f;
-        }
-
-        .actions {
-            width: 210mm;
-            margin: 14px auto;
-
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .actions button {
-            border: none;
-            padding: 10px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-
-            background: #7b101a;
-            color: white;
-
-            font-weight: bold;
-        }
-
-        @media print {
-
-            @page {
-                size: A4 portrait;
-                margin: 5mm;
-            }
-
-            html,
-            body {
-                width: 210mm;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: white !important;
-            }
-
-            .invoice {
-                width: 100% !important;
-                min-height: 0 !important;
-
-                margin: 0 !important;
-                padding: 6mm !important;
-
-                box-shadow: none !important;
-
-                border: 2px double #b7892d !important;
-            }
-
-            .actions {
-                display: none !important;
-            }
-
-            .invoice,
-            .details,
-            .items,
-            .summary,
-            .payment,
-            .footer {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-        }
-
-    </style>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>
+    Invoice {{ bill["bill_no"] }}
+</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 15px;
+    background: #e9e3d8;
+    font-family: Arial, sans-serif;
+    color: #2e1d14;
+}
+
+.invoice {
+    width: 210mm;
+    min-height: 270mm;
+    margin: auto;
+    background: #fffdf8;
+    padding: 9mm;
+    border: 3px double #b88c2d;
+    box-shadow: 0 5px 25px rgba(0,0,0,.15);
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #8a1520;
+    padding-bottom: 10px;
+}
+
+.logo {
+    width: 115px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.brand {
+    flex: 1;
+    text-align: center;
+}
+
+.jai {
+    font-size: 11px;
+    color: #87131c;
+    font-weight: bold;
+}
+
+.shop-name {
+    margin: 4px 0 2px;
+    color: #7b101a;
+    font-size: 28px;
+}
+
+.est {
+    color: #9a762e;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.address {
+    margin-top: 5px;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.invoice-tag {
+    width: 110px;
+    text-align: center;
+    background: #7c111a;
+    color: #fff1cb;
+    padding: 9px 6px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px 30px;
+    margin-top: 13px;
+    padding: 10px;
+    border: 1px solid #d0b36b;
+    background: #fff9ec;
+    font-size: 11px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.detail-row strong {
+    color: #701018;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+}
+
+th {
+    background: #791019;
+    color: #fff3ce;
+    padding: 7px 4px;
+    font-size: 9px;
+    border: 1px solid #a56d61;
+}
+
+td {
+    padding: 7px 4px;
+    border: 1px solid #ddcba2;
+    text-align: center;
+    font-size: 9px;
+}
+
+.total-area {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.summary {
+    width: 300px;
+    border: 1px solid #cfb06a;
+    padding: 9px;
+    background: #fff9eb;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 10px;
+}
+
+.grand {
+    border-top: 2px solid #7b101a;
+    margin-top: 4px;
+    padding-top: 7px;
+    color: #7b101a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.section-grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.info-box {
+    border: 1px solid #d3b773;
+    padding: 9px;
+    font-size: 9px;
+    line-height: 1.7;
+    background: #fffaf0;
+}
+
+.info-box h4 {
+    margin: 0 0 5px;
+    color: #791019;
+    font-size: 11px;
+}
+
+.terms {
+    margin-top: 12px;
+    padding: 9px;
+    border: 1px solid #d3b773;
+    background: #fffaf1;
+    font-size: 8.5px;
+    line-height: 1.7;
+}
+
+.terms strong {
+    color: #791019;
+}
+
+.signature {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.footer {
+    margin-top: 16px;
+    padding-top: 8px;
+    border-top: 1px solid #c7a653;
+    text-align: center;
+    color: #781019;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.actions {
+    text-align: center;
+    margin: 18px 0;
+}
+
+.actions button,
+.actions a {
+    display: inline-block;
+    border: none;
+    background: #791019;
+    color: white;
+    text-decoration: none;
+    padding: 10px 16px;
+    margin: 3px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+@media print {
+
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .invoice {
+        box-shadow: none;
+        margin: 0;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .actions {
+        display: none;
+    }
+
+}
+
+</style>
 
 </head>
 
+
 <body>
+
+
+<div class="actions">
+
+    <a href="{{ url_for('dashboard') }}">
+        Dashboard
+    </a>
+
+    <a href="{{ url_for('bills') }}">
+        Bill History
+    </a>
+
+    <button onclick="window.print()">
+        Print Invoice
+    </button>
+
+</div>
+
 
 <div class="invoice">
 
-    <div class="top-text">
-        || जय श्री राम ||
-    </div>
 
-    <div class="header">
+    <div class="top">
 
-        <div class="logo-box">
+        <img
+            class="logo"
+            src="{{ url_for('static', filename='images/shop-logo.png') }}"
+            alt="Logo"
+        >
 
-            <img
-                src="{{ url_for('static', filename='images/shop-logo.png') }}"
-                alt="Shop Logo"
-            >
 
-        </div>
+        <div class="brand">
 
-        <div class="shop-center">
+            <div class="jai">
+                || जय श्री राम ||
+            </div>
 
             <h1 class="shop-name">
                 श्री राम कुमार ज्वैलर्स
             </h1>
 
-            <div class="established">
+            <div class="est">
                 ESTABLISHED 1992
             </div>
 
-            <div class="service-strip">
-                GOLD • SILVER • JEWELLERY
+            <div class="address">
+
+                हर्रायपुर आलमचंद, कौशांबी
+                <br>
+
+                Proprietors:
+                Rajesh Kumar Soni |
+                Umesh Kumar Soni
+
             </div>
 
         </div>
 
-        <div class="header-right">
 
-            <strong>JEWELLERY INVOICE</strong>
-
-            
-
+        <div class="invoice-tag">
+            TAX INVOICE
         </div>
 
     </div>
 
-    <div class="owners">
-
-        <strong>Proprietors:</strong>
-
-        Rajesh Kumar Soni
-
-        &nbsp; | &nbsp;
-
-        Umesh Kumar Soni
-
-    </div>
-
-    <div class="contact">
-
-       हर्रायपुर आलमचंद, कौशांबी
-
-        &nbsp; • &nbsp;
-
-        ☎ 9935850807
-
-        &nbsp; | &nbsp;
-
-        9935256605
-
-    </div>
-
-    <div class="invoice-title">
-
-        <span>TAX INVOICE</span>
-
-    </div>
 
     <div class="details">
 
-        <div class="detail-side">
 
-            <div class="line">
+        <div class="detail-row">
 
-                <div class="label">
-                    Bill No.
-                </div>
+            <strong>Bill No.</strong>
 
-                <div class="value">
-                    {{ bill["bill_no"] }}
-                </div>
-
-            </div>
-
-            <div class="line">
-
-                <div class="label">
-                    Date
-                </div>
-
-                <div class="value">
-                    {{ bill["created_at"] }}
-                </div>
-
-            </div>
-
-            <div class="line">
-
-                <div class="label">
-                    Payment
-                </div>
-
-                <div class="value">
-                    {{ bill["payment_mode"] }}
-                </div>
-
-            </div>
+            <span>
+                {{ bill["bill_no"] }}
+            </span>
 
         </div>
 
-        <div class="detail-side">
 
-            <div class="line">
+        <div class="detail-row">
 
-                <div class="label">
-                    Customer name
-                </div>
+            <strong>Date</strong>
 
-                <div class="value">
-                    {{ bill["customer_name"] }}
-                </div>
+            <span>
+                {{ bill["created_at"] }}
+            </span>
 
-            </div>
+        </div>
 
-            <div class="line">
 
-                <div class="label">
-                    Mobile
-                </div>
+        <div class="detail-row">
 
-                <div class="value">
-                    {{ bill["customer_mobile"] }}
-                </div>
+            <strong>Customer</strong>
 
-            </div>
+            <span>
+                {{ bill["customer_name"] }}
+            </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <strong>Mobile</strong>
+
+            <span>
+                {{ bill["customer_mobile"] or "-" }}
+            </span>
 
         </div>
 
     </div>
 
-    <table class="items">
+
+    <table>
 
         <thead>
 
         <tr>
 
-            <th>S.No.</th>
             <th>Item</th>
+
             <th>Purity</th>
 
-            <th>
-                Gross Wt.
-            </th>
+            <th>Gross Wt.</th>
 
-            <th>
-                Net Wt.
-            </th>
+            <th>Net Wt.</th>
 
-            <th>
-                Rate
-            </th>
+            <th>Rate ₹/g</th>
 
-            <th>
-                Making
-            </th>
+            <th>Making ₹/g</th>
 
-            <th>
-                Amount
-            </th>
+            <th>Amount ₹</th>
 
         </tr>
 
         </thead>
+
 
         <tbody>
 
@@ -631,16 +406,14 @@
         <tr>
 
             <td>
-                {{ loop.index }}
-            </td>
-
-            <td>
                 {{ item["item_name"] }}
             </td>
+
 
             <td>
                 {{ item["purity"] }}
             </td>
+
 
             <td>
 
@@ -656,17 +429,21 @@
 
             </td>
 
+
             <td>
                 {{ "%.3f"|format(item["net_weight"] or 0) }}
             </td>
+
 
             <td>
                 ₹{{ "%.2f"|format(item["rate"] or 0) }}
             </td>
 
+
             <td>
                 ₹{{ "%.2f"|format(item["making"] or 0) }}
             </td>
+
 
             <td>
                 ₹{{ "%.2f"|format(item["amount"] or 0) }}
@@ -680,72 +457,52 @@
 
     </table>
 
-    <div class="summary">
 
-        <div class="note">
+    <div class="total-area">
 
-            <h4>
-                Customer Note
-            </h4>
+        <div class="summary">
 
-            <p>
-                Thank you for shopping with
-                <strong>Shree Ram Kumar Jewellers.</strong>
-            </p>
 
-            <p>
-                Please keep this invoice safe for future reference.
-            </p>
+            <div class="summary-row">
 
-        </div>
+                <span>Subtotal</span>
 
-        <div class="totals">
-
-            <div class="total-row">
-
-                <div>
-                    Subtotal
-                </div>
-
-                <div>
+                <strong>
                     ₹{{ "%.2f"|format(bill["subtotal"] or 0) }}
-                </div>
+                </strong>
 
             </div>
 
-            <div class="total-row">
 
-                <div>
-                    Discount
-                </div>
+            <div class="summary-row">
 
-                <div>
+                <span>Discount</span>
+
+                <strong>
                     ₹{{ "%.2f"|format(bill["discount"] or 0) }}
-                </div>
+                </strong>
 
             </div>
 
-            <div class="total-row">
 
-                <div>
-                    GST
-                </div>
+            <div class="summary-row">
 
-                <div>
+                <span>GST</span>
+
+                <strong>
                     ₹{{ "%.2f"|format(bill["gst"] or 0) }}
-                </div>
+                </strong>
 
             </div>
 
-            <div class="total-row grand">
 
-                <div>
-                    GRAND TOTAL
-                </div>
+            <div class="summary-row grand">
 
-                <div>
+                <span>Grand Total</span>
+
+                <span>
                     ₹{{ "%.2f"|format(bill["grand_total"] or 0) }}
-                </div>
+                </span>
 
             </div>
 
@@ -753,153 +510,102 @@
 
     </div>
 
-    <div class="payment-title">
-        Payment Details
-    </div>
 
-    <div class="payment">
+    <div class="section-grid">
 
-        <div class="payment-box">
 
-            <small>PAYMENT MODE</small>
+        <div class="info-box">
 
+            <h4>Payment Details</h4>
+
+            Payment Mode:
             <strong>
-                {{ bill["payment_mode"] }}
+                {{ bill["payment_mode"] or "-" }}
             </strong>
 
-        </div>
+            <br>
 
-        <div class="payment-box">
-
-            <small>AMOUNT PAID</small>
-
+            Amount Paid:
             <strong>
                 ₹{{ "%.2f"|format(bill["amount_paid"] or 0) }}
             </strong>
 
-        </div>
+            <br>
 
-        <div class="payment-box">
-
-            <small>BALANCE / DUE</small>
-
-            <strong class="due">
+            Balance / Due:
+            <strong>
                 ₹{{ "%.2f"|format(bill["balance"] or 0) }}
             </strong>
 
         </div>
 
-    </div>
 
-    {% if payments and payments|length > 0 %}
+        <div class="info-box">
 
-    <div class="payment-history">
+            <h4>Jewellery Calculation</h4>
 
-        <h4>Payment History</h4>
+            Silver 100% = Weight × Rate
 
-        <table>
+            <br>
 
-            <tr>
-                <th>Date</th>
-                <th>Mode</th>
-                <th>Amount</th>
-                <th>Note</th>
-            </tr>
+            Silver 95% = Weight × Rate × 0.95
 
-            {% for payment in payments %}
+            <br>
 
-            <tr>
+            Silver 90% = Weight × Rate × 0.90
 
-                <td>
-                    {{ payment["created_at"] }}
-                </td>
+            <br>
 
-                <td>
-                    {{ payment["payment_mode"] }}
-                </td>
+            Making = Net Weight × Making ₹/gram
 
-                <td>
-                    ₹{{ "%.2f"|format(payment["amount"] or 0) }}
-                </td>
-
-                <td>
-                    {{ payment["note"] }}
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </table>
+        </div>
 
     </div>
 
-    {% endif %}
+
+    <div class="terms">
+
+        <strong>नियम एवं शर्तें:</strong>
+
+        <br>
+
+        1. बिके हुए आभूषण 7 दिन तक बदले जा सकते हैं।
+
+        <br>
+
+        2. आभूषण की चमक खराब न हो, पर्ची साथ लाना आवश्यक है।
+
+        <br>
+
+        3. भाव की जिम्मेदारी ग्राहक की होगी।
+
+        <br>
+
+        4. माल वापसी के समय पर्ची साथ लाना आवश्यक है।
+
+    </div>
+
+
+    <div class="signature">
+
+        For Shree Ram Kumar Jewellers
+
+        <br><br><br>
+
+        Authorized Signature
+
+    </div>
+
 
     <div class="footer">
 
-        <div class="terms">
-
-            <h4>
-                नियम व शर्तें
-            </h4>
-
-            <p>
-                •बिके हुए आभूषण 7 दिन तक बदले जा सकते हैं।
-            </p>
-
-            <p>
-                •आभूषण की चमक खराब न हो, पर्ची साथ लाना आवश्यक है।
-            </p>
-
-            <p>
-                • भाव की जिम्मेदारी ग्राहक की होगी।
-            </p>
-            <p>
-                • माल वापसी के समय पर्ची साथ लाना आवश्यक है।        
-            </p>
-
-        </div>
-
-        <div class="signature">
-
-            <strong>
-                For श्री राम कुमार ज्वैलर्स
-            </strong>
-
-            <div class="signature-line"></div>
-
-            Authorised Signature
-
-        </div>
-
-    </div>
-
-    <div class="slogan">
         !! शुद्धता हमारी पहचान, विश्वास आपका !!
+
     </div>
 
-</div>
-
-<div class="actions">
-
-    <button onclick="window.print()">
-        🖨 Print Bill
-    </button>
-
-    <button onclick="window.location.href='/new-bill'">
-        + New Bill
-    </button>
-
-    <button onclick="window.location.href='/bills'">
-        Bill History
-    </button>
-
-    <button onclick="window.location.href='/'">
-        Dashboard
-    </button>
 
 </div>
 
 </body>
+
 </html>

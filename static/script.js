@@ -37,33 +37,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function getGoldRateByPurity(purity) {
 
-    const gold24Rate =
+    // User enters 24K market rate for 10 grams
+    const gold24Rate10Gram =
         parseFloat(
             document.getElementById("gold_24k_rate")?.value
         ) || 0;
 
-
     const karatMap = {
-
         "24K": 24,
         "22K": 22,
         "21K": 21,
         "20K": 20,
         "18K": 18
-
     };
 
+    const karat = karatMap[purity];
 
-    const karat =
-        karatMap[purity];
-
-
-    if (!karat || gold24Rate <= 0) {
-
+    if (!karat || gold24Rate10Gram <= 0) {
         return 0;
-
     }
 
+    // Convert 10 gram 24K rate to per gram
+    const gold24PerGram =
+        gold24Rate10Gram / 10;
+
+    // Calculate selected purity per gram rate
+    return gold24PerGram * karat / 24;
+}
 
     return gold24Rate * karat / 24;
 }

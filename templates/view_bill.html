@@ -2,11 +2,8 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Invoice {{ bill["bill_no"] }}</title>
 
@@ -18,609 +15,436 @@
 
 body {
     margin: 0;
-    padding: 20px;
-    background: #e7e1d6;
+    padding: 18px;
+    background: #e9e3d8;
     font-family: Arial, Helvetica, sans-serif;
-    color: #2e1c13;
+    color: #2f1d14;
 }
-
-
-/* =========================
-   BUTTONS
-========================= */
 
 .actions {
     text-align: center;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
 .actions a,
 .actions button {
-
     display: inline-block;
-
-    background: #7b101a;
-
-    color: white;
-
     border: none;
-
     text-decoration: none;
-
-    padding: 11px 20px;
-
+    padding: 10px 17px;
     margin: 3px;
-
     border-radius: 6px;
-
-    font-size: 14px;
-
+    font-size: 13px;
     font-weight: bold;
-
     cursor: pointer;
 }
 
+.main-btn {
+    background: #7b101a;
+    color: white;
+}
 
-/* =========================
-   INVOICE
-========================= */
+.whatsapp-btn {
+    background: #25D366;
+    color: white;
+}
+
+.print-btn {
+    background: #b68b32;
+    color: white;
+}
 
 .invoice {
-
     width: 210mm;
-
+    min-height: 285mm;
     margin: auto;
-
     background: #fffdf8;
-
     border: 4px double #b58b32;
-
-    padding: 10mm;
-
-    box-shadow: 0 8px 30px rgba(0,0,0,.16);
+    padding: 9mm;
+    box-shadow: 0 8px 28px rgba(0,0,0,.15);
 }
 
 
-/* =========================
-   HEADER
-========================= */
+/* ================= HEADER ================= */
 
 .header {
-
     display: grid;
-
-    grid-template-columns: 120px 1fr 120px;
-
+    grid-template-columns: 115px 1fr 110px;
     align-items: center;
-
-    gap: 15px;
-
-    padding-bottom: 13px;
-
-    border-bottom: 2px solid #7d1019;
+    gap: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #7b101a;
 }
 
-
 .logo {
-
-    width: 105px;
-
-    height: 105px;
-
+    width: 100px;
+    height: 100px;
     object-fit: contain;
 }
 
-
 .brand {
-
     text-align: center;
 }
 
-
 .jai {
-
-    font-size: 12px;
-
-    font-weight: bold;
-
     color: #7b101a;
+    font-size: 12px;
+    font-weight: bold;
 }
-
 
 .shop-name {
-
     margin: 3px 0;
-
-    font-size: 30px;
-
     color: #7b101a;
-
-    line-height: 1.15;
+    font-size: 29px;
+    line-height: 1.1;
 }
 
-
 .est {
-
+    color: #a17d31;
     font-size: 9px;
-
-    color: #9a762d;
-
     font-weight: bold;
-
     letter-spacing: 1px;
 }
 
-
 .address {
-
     margin-top: 5px;
-
     font-size: 10px;
-
     line-height: 1.5;
 }
 
-
 .invoice-tag {
-
     background: #7b101a;
-
-    color: #fff2cf;
-
-    padding: 10px 5px;
-
+    color: #fff2d0;
+    padding: 11px 5px;
     text-align: center;
-
     border-radius: 5px;
-
-    font-weight: bold;
-
     font-size: 11px;
+    font-weight: bold;
 }
 
 
-/* =========================
-   CUSTOMER DETAILS
-========================= */
+/* ================= DETAILS ================= */
 
 .details {
-
-    margin-top: 14px;
-
-    padding: 11px 14px;
-
-    border: 1px solid #d0b36e;
-
+    margin-top: 12px;
+    border: 1px solid #d2b772;
     background: #fff8e8;
-
+    padding: 10px 13px;
     display: grid;
-
     grid-template-columns: 1fr 1fr;
-
-    gap: 8px 35px;
-
-    font-size: 11px;
+    gap: 8px 30px;
+    font-size: 10.5px;
 }
-
 
 .detail {
-
-    display: grid;
-
-    grid-template-columns: 90px 1fr;
-
-    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
-
 
 .detail strong {
-
-    color: #741018;
+    color: #7b101a;
 }
 
 
-.detail span {
-
-    text-align: right;
-}
-
-
-/* =========================
-   TABLE
-========================= */
+/* ================= ITEMS ================= */
 
 table {
-
     width: 100%;
-
     border-collapse: collapse;
-
-    margin-top: 14px;
-
+    margin-top: 12px;
     table-layout: fixed;
 }
 
-
 th {
-
     background: #7b101a;
-
-    color: #fff2cf;
-
-    border: 1px solid #9f5a50;
-
-    padding: 9px 4px;
-
-    font-size: 9.5px;
+    color: #fff1cc;
+    border: 1px solid #985a52;
+    padding: 8px 3px;
+    font-size: 9px;
 }
-
 
 td {
-
-    border: 1px solid #dbc79d;
-
-    padding: 9px 4px;
-
+    border: 1px solid #dbc89e;
+    padding: 8px 3px;
     text-align: center;
-
     font-size: 9.5px;
 }
 
-
 tbody tr:nth-child(even) {
-
     background: #fff9ed;
 }
 
-
-/* column sizes */
-
 th:nth-child(1) { width: 15%; }
-
 th:nth-child(2) { width: 11%; }
-
 th:nth-child(3) { width: 13%; }
-
 th:nth-child(4) { width: 12%; }
-
 th:nth-child(5) { width: 16%; }
-
 th:nth-child(6) { width: 16%; }
-
 th:nth-child(7) { width: 17%; }
 
 
-/* =========================
-   PAYMENT + TOTAL
-========================= */
+/* ================= BILL BOXES ================= */
 
-.middle-grid {
-
+.info-grid {
     display: grid;
-
     grid-template-columns: 1fr 1fr;
-
-    gap: 18px;
-
-    margin-top: 15px;
+    gap: 14px;
+    margin-top: 13px;
 }
-
 
 .box {
-
     border: 1px solid #d0b26b;
-
     background: #fff9ec;
-
-    padding: 12px;
-
-    min-height: 125px;
+    padding: 10px 12px;
 }
-
 
 .box-title {
-
-    margin-bottom: 9px;
-
     color: #7b101a;
-
-    font-size: 12px;
-
+    font-size: 11px;
     font-weight: bold;
-
     border-bottom: 1px solid #dac28a;
-
     padding-bottom: 6px;
+    margin-bottom: 5px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 4px 0;
+    font-size: 10.5px;
+}
+
+.grand-total {
+    color: #7b101a;
+    font-weight: bold;
+    font-size: 14px;
+    border-top: 2px solid #7b101a;
+    margin-top: 5px;
+    padding-top: 7px;
 }
 
 
-.payment-row,
-.summary-row {
+/* ================= PENDING ================= */
 
+.pending-box {
+    margin-top: 13px;
+    border: 2px solid #7b101a;
+    padding: 10px 13px;
+    background: #fff4e8;
+}
+
+.pending-title {
+    color: #7b101a;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.pending-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.pending-item {
+    text-align: center;
+    border-right: 1px solid #dac28a;
+}
+
+.pending-item:last-child {
+    border-right: none;
+}
+
+.pending-label {
+    font-size: 9px;
+    color: #705849;
+    margin-bottom: 4px;
+}
+
+.pending-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: #7b101a;
+}
+
+.total-pending {
+    font-size: 17px;
+}
+
+
+/* ================= BOTTOM ================= */
+
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1.45fr .55fr;
+    gap: 14px;
+    margin-top: 13px;
+}
+
+.terms,
+.signature-box {
+    border: 1px solid #d0b26b;
+    background: #fffaf1;
+    padding: 10px;
+    min-height: 115px;
+}
+
+.terms {
+    font-size: 9px;
+    line-height: 1.65;
+}
+
+.terms-title {
+    color: #7b101a;
+    font-weight: bold;
+    font-size: 10.5px;
+    margin-bottom: 4px;
+}
+
+.signature-box {
     display: flex;
-
+    flex-direction: column;
     justify-content: space-between;
+    text-align: center;
+    font-size: 9.5px;
+    font-weight: bold;
+}
 
-    gap: 10px;
+.signature-space {
+    flex: 1;
+}
 
-    padding: 5px 0;
-
+.footer {
+    margin-top: 13px;
+    border-top: 2px solid #c29c47;
+    border-bottom: 1px solid #d5bd83;
+    background: #fff8e6;
+    color: #7b101a;
+    text-align: center;
+    padding: 8px 4px;
+    font-weight: bold;
     font-size: 10.5px;
 }
 
 
-.grand {
-
-    margin-top: 6px;
-
-    padding-top: 9px;
-
-    border-top: 2px solid #7b101a;
-
-    color: #7b101a;
-
-    font-size: 15px;
-
-    font-weight: bold;
-}
-
-
-/* =========================
-   TERMS + SIGNATURE
-========================= */
-
-.bottom-grid {
-
-    display: grid;
-
-    grid-template-columns: 1.45fr .55fr;
-
-    gap: 18px;
-
-    margin-top: 15px;
-}
-
-
-.terms {
-
-    border: 1px solid #d0b26b;
-
-    background: #fffaf1;
-
-    padding: 12px;
-
-    min-height: 135px;
-
-    font-size: 9.5px;
-
-    line-height: 1.8;
-}
-
-
-.terms-title {
-
-    color: #7b101a;
-
-    font-weight: bold;
-
-    margin-bottom: 5px;
-
-    font-size: 11px;
-}
-
-
-.signature-box {
-
-    border: 1px solid #d0b26b;
-
-    background: #fffaf1;
-
-    min-height: 135px;
-
-    padding: 12px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: space-between;
-
-    text-align: center;
-
-    font-size: 10px;
-
-    font-weight: bold;
-}
-
-
-.signature-space {
-
-    flex: 1;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-.footer {
-
-    margin-top: 15px;
-
-    padding: 10px 5px;
-
-    border-top: 2px solid #c29c47;
-
-    border-bottom: 1px solid #d5bd83;
-
-    text-align: center;
-
-    color: #7b101a;
-
-    font-weight: bold;
-
-    font-size: 11px;
-
-    background: #fff8e6;
-}
-
-
-/* =========================
-   PRINT
-========================= */
+/* ================= PRINT ================= */
 
 @page {
-
     size: A4;
-
     margin: 5mm;
 }
-
 
 @media print {
 
     body {
-
-        margin: 0;
-
         padding: 0;
-
+        margin: 0;
         background: white;
-
         -webkit-print-color-adjust: exact;
-
         print-color-adjust: exact;
     }
 
-
     .actions {
-
         display: none !important;
     }
 
-
     .invoice {
-
         width: 200mm;
-
+        min-height: auto;
         margin: auto;
-
-        padding: 7mm;
-
+        padding: 6mm;
         border: 3px double #b58b32;
-
         box-shadow: none;
     }
 
-
     .header {
-
-        grid-template-columns: 100px 1fr 105px;
+        grid-template-columns: 95px 1fr 100px;
     }
-
 
     .logo {
-
-        width: 88px;
-
-        height: 88px;
+        width: 82px;
+        height: 82px;
     }
-
 
     .shop-name {
-
-        font-size: 26px;
+        font-size: 25px;
     }
 
-
-    .details {
-
-        margin-top: 10px;
-
-        padding: 8px 10px;
+    .details,
+    table,
+    .info-grid,
+    .pending-box,
+    .bottom-grid,
+    .footer {
+        break-inside: avoid;
     }
-
-
-    table {
-
-        margin-top: 10px;
-    }
-
 
     th,
     td {
-
-        padding: 6px 3px;
+        padding: 5px 3px;
     }
-
-
-    .middle-grid,
-    .bottom-grid {
-
-        margin-top: 10px;
-    }
-
-
-    .box {
-
-        min-height: 100px;
-
-        padding: 9px;
-    }
-
 
     .terms,
     .signature-box {
-
-        min-height: 110px;
-
-        padding: 9px;
-    }
-
-
-    .footer {
-
-        margin-top: 10px;
-
-        padding: 7px;
-    }
-
-
-    .header,
-    .details,
-    table,
-    .middle-grid,
-    .bottom-grid,
-    .footer {
-
-        break-inside: avoid;
+        min-height: 95px;
     }
 }
 
 </style>
-
 </head>
 
 
 <body>
 
 
+<!-- ================= BUTTONS ================= -->
+
 <div class="actions">
 
-    <a href="{{ url_for('dashboard') }}">
-        Dashboard
-    </a>
+    {% if not public_view %}
 
-    <a href="{{ url_for('bills') }}">
-        Bill History
-    </a>
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="main-btn"
+        >
+            Dashboard
+        </a>
 
-    <button onclick="window.print()">
+        <a
+            href="{{ url_for('bills') }}"
+            class="main-btn"
+        >
+            Bill History
+        </a>
+
+        {% if whatsapp_url %}
+
+            <a
+                href="{{ whatsapp_url }}"
+                target="_blank"
+                class="whatsapp-btn"
+            >
+                Send Bill on WhatsApp
+            </a>
+
+        {% endif %}
+
+    {% endif %}
+
+    <button
+        onclick="window.print()"
+        class="print-btn"
+    >
         Print Invoice
     </button>
 
 </div>
 
+
+<!-- ================= INVOICE ================= -->
 
 <div class="invoice">
 
@@ -628,7 +452,6 @@ th:nth-child(7) { width: 17%; }
     <!-- HEADER -->
 
     <div class="header">
-
 
         <div>
 
@@ -644,25 +467,16 @@ th:nth-child(7) { width: 17%; }
         <div class="brand">
 
             <div class="jai">
-
                 || जय श्री राम ||
-
             </div>
-
 
             <h1 class="shop-name">
-
-                श्री राम कुमार ज्वेलर्स
-
+                श्री राम कुमार ज्वैलर्स
             </h1>
 
-
             <div class="est">
-
                 ESTABLISHED 1992
-
             </div>
-
 
             <div class="address">
 
@@ -680,31 +494,20 @@ th:nth-child(7) { width: 17%; }
 
 
         <div class="invoice-tag">
-
             TAX INVOICE
-
         </div>
 
-
     </div>
-
 
 
     <!-- CUSTOMER DETAILS -->
 
     <div class="details">
 
-
         <div class="detail">
-
             <strong>Bill No.</strong>
-
-            <span>
-                {{ bill["bill_no"] }}
-            </span>
-
+            <span>{{ bill["bill_no"] }}</span>
         </div>
-
 
         <div class="detail">
 
@@ -714,7 +517,9 @@ th:nth-child(7) { width: 17%; }
 
                 {% if bill["created_at"] %}
 
-                    {{ bill["created_at"]|string|truncate(10, True, '') }}
+                    {% set d = bill["created_at"]|string %}
+
+                    {{ d[8:10] }}-{{ d[5:7] }}-{{ d[0:4] }}
 
                 {% else %}
 
@@ -748,32 +553,23 @@ th:nth-child(7) { width: 17%; }
 
         </div>
 
-
     </div>
-
 
 
     <!-- ITEMS -->
 
     <table>
 
-
         <thead>
 
         <tr>
 
             <th>Item</th>
-
             <th>Purity</th>
-
             <th>Gross Wt.</th>
-
             <th>Net Wt.</th>
-
             <th>Rate ₹/g</th>
-
             <th>Making ₹/g</th>
-
             <th>Amount ₹</th>
 
         </tr>
@@ -783,21 +579,17 @@ th:nth-child(7) { width: 17%; }
 
         <tbody>
 
-
         {% for item in items %}
 
         <tr>
-
 
             <td>
                 {{ item["item_name"] }}
             </td>
 
-
             <td>
                 {{ item["purity"] }}
             </td>
-
 
             <td>
 
@@ -813,63 +605,42 @@ th:nth-child(7) { width: 17%; }
 
             </td>
 
-
             <td>
-
                 {{ "%.3f"|format(item["net_weight"] or 0) }}
-
             </td>
 
-
             <td>
-
                 ₹{{ "%.2f"|format(item["rate"] or 0) }}
-
             </td>
 
-
             <td>
-
                 ₹{{ "%.2f"|format(item["making"] or 0) }}
-
             </td>
-
 
             <td>
-
                 ₹{{ "%.2f"|format(item["amount"] or 0) }}
-
             </td>
-
 
         </tr>
 
         {% endfor %}
 
-
         </tbody>
-
 
     </table>
 
 
+    <!-- PAYMENT + SUMMARY -->
 
-    <!-- PAYMENT + TOTAL -->
-
-    <div class="middle-grid">
-
+    <div class="info-grid">
 
         <div class="box">
 
-
             <div class="box-title">
-
                 Payment Details
-
             </div>
 
-
-            <div class="payment-row">
+            <div class="row">
 
                 <span>Payment Mode</span>
 
@@ -880,119 +651,156 @@ th:nth-child(7) { width: 17%; }
             </div>
 
 
-            <div class="payment-row">
+            <div class="row">
 
                 <span>Amount Paid</span>
 
                 <strong>
-
                     ₹{{ "%.2f"|format(bill["amount_paid"] or 0) }}
-
                 </strong>
 
             </div>
 
 
-            <div class="payment-row">
+            <div class="row">
 
-                <span>Balance / Due</span>
+                <span>Current Bill Due</span>
 
                 <strong>
-
-                    ₹{{ "%.2f"|format(bill["balance"] or 0) }}
-
+                    ₹{{ "%.2f"|format(current_due or 0) }}
                 </strong>
 
             </div>
 
-
         </div>
-
 
 
         <div class="box">
 
-
             <div class="box-title">
-
                 Bill Summary
-
             </div>
 
 
-            <div class="summary-row">
+            <div class="row">
 
                 <span>Subtotal</span>
 
                 <strong>
-
                     ₹{{ "%.2f"|format(bill["subtotal"] or 0) }}
-
                 </strong>
 
             </div>
 
 
-            <div class="summary-row">
+            <div class="row">
 
                 <span>Discount</span>
 
                 <strong>
-
                     ₹{{ "%.2f"|format(bill["discount"] or 0) }}
-
                 </strong>
 
             </div>
 
 
-            <div class="summary-row">
+            <div class="row">
 
                 <span>GST</span>
 
                 <strong>
-
                     ₹{{ "%.2f"|format(bill["gst"] or 0) }}
-
                 </strong>
 
             </div>
 
 
-            <div class="summary-row grand">
+            <div class="row grand-total">
 
                 <span>Grand Total</span>
 
                 <span>
-
                     ₹{{ "%.2f"|format(bill["grand_total"] or 0) }}
-
                 </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PENDING SECTION -->
+
+    <div class="pending-box">
+
+        <div class="pending-title">
+            Customer Pending Summary
+        </div>
+
+
+        <div class="pending-grid">
+
+
+            <div class="pending-item">
+
+                <div class="pending-label">
+                    Previous Pending
+                </div>
+
+                <div class="pending-value">
+
+                    ₹{{ "%.2f"|format(previous_pending or 0) }}
+
+                </div>
+
+            </div>
+
+
+            <div class="pending-item">
+
+                <div class="pending-label">
+                    Current Bill Due
+                </div>
+
+                <div class="pending-value">
+
+                    ₹{{ "%.2f"|format(current_due or 0) }}
+
+                </div>
+
+            </div>
+
+
+            <div class="pending-item">
+
+                <div class="pending-label">
+                    Total Pending
+                </div>
+
+                <div class="pending-value total-pending">
+
+                    ₹{{ "%.2f"|format(total_pending or 0) }}
+
+                </div>
 
             </div>
 
 
         </div>
 
-
     </div>
-
 
 
     <!-- TERMS + SIGNATURE -->
 
     <div class="bottom-grid">
 
-
         <div class="terms">
 
-
             <div class="terms-title">
-
                 नियम एवं शर्तें:
-
             </div>
-
 
             1. बिके हुए आभूषण 7 दिन तक बदले जा सकते हैं।
 
@@ -1008,51 +816,34 @@ th:nth-child(7) { width: 17%; }
 
             4. माल वापसी के समय पर्ची साथ लाना आवश्यक है।
 
-
         </div>
-
 
 
         <div class="signature-box">
 
-
             <div>
-
                 For Shree Ram Kumar Jewellers
-
             </div>
 
-
-            <div class="signature-space">
-            </div>
-
+            <div class="signature-space"></div>
 
             <div>
-
                 Authorized Signature
-
             </div>
-
 
         </div>
 
-
     </div>
-
 
 
     <!-- FOOTER -->
 
     <div class="footer">
-
         !! शुद्धता हमारी पहचान, विश्वास आपका !!
-
     </div>
 
 
 </div>
 
-
 </body>
-
 </html>

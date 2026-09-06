@@ -25,10 +25,98 @@ document.addEventListener("DOMContentLoaded", function () {
             `${yyyy}-${mm}-${dd}`;
     }
 
+    updateAllGoldRates();
 
     calculateBillTotal();
-
 });
+
+
+// =====================================================
+// GOLD RATE FROM 24K
+// =====================================================
+
+function getGoldRateByPurity(purity) {
+
+    const gold24Rate =
+        parseFloat(
+            document.getElementById("gold_24k_rate")?.value
+        ) || 0;
+
+
+    const karatMap = {
+
+        "24K": 24,
+        "22K": 22,
+        "21K": 21,
+        "20K": 20,
+        "18K": 18
+
+    };
+
+
+    const karat =
+        karatMap[purity];
+
+
+    if (!karat || gold24Rate <= 0) {
+
+        return 0;
+
+    }
+
+
+    return gold24Rate * karat / 24;
+}
+
+
+// =====================================================
+// UPDATE GOLD RATE PREVIEW + ALL GOLD ROWS
+// =====================================================
+
+function updateAllGoldRates() {
+
+    const purities =
+        ["24K", "22K", "21K", "20K", "18K"];
+
+
+    purities.forEach(function (purity) {
+
+        const rate =
+            getGoldRateByPurity(purity);
+
+
+        const preview =
+            document.getElementById(
+                "preview_" + purity.toLowerCase()
+            );
+
+
+        if (preview) {
+
+            preview.textContent =
+                "₹" + rate.toFixed(2);
+
+        }
+
+    });
+
+
+    document
+        .querySelectorAll(".item-row")
+        .forEach(function (row) {
+
+            const metal =
+                row.querySelector(".metal")?.value;
+
+
+            if (metal === "Gold") {
+
+                calculateRow(row);
+
+            }
+
+        });
+}
 
 
 // =====================================================
@@ -42,6 +130,9 @@ function metalChanged(selectElement) {
 
     const purity =
         row.querySelector(".purity");
+
+    const rateField =
+        row.querySelector(".rate");
 
     const metal =
         selectElement.value;
@@ -68,14 +159,42 @@ function metalChanged(selectElement) {
 
         `;
 
+
+        if (rateField) {
+
+            rateField.readOnly = false;
+
+            rateField.value = "";
+
+            rateField.placeholder =
+                "₹ / gram";
+
+            rateField.classList.remove(
+                "gold-auto-rate"
+            );
+
+        }
+
     }
 
     else {
 
         purity.innerHTML = `
 
-            <option value="22K">
+            <option value="24K">
+                Gold 24K
+            </option>
+
+            <option value="22K" selected>
                 Gold 22K
+            </option>
+
+            <option value="21K">
+                Gold 21K
+            </option>
+
+            <option value="20K">
+                Gold 20K
             </option>
 
             <option value="18K">
@@ -84,11 +203,24 @@ function metalChanged(selectElement) {
 
         `;
 
+
+        if (rateField) {
+
+            rateField.readOnly = true;
+
+            rateField.placeholder =
+                "Auto Rate";
+
+            rateField.classList.add(
+                "gold-auto-rate"
+            );
+
+        }
+
     }
 
 
     calculateRow(row);
-
 }
 
 
@@ -109,25 +241,53 @@ function calculateRow(row) {
             row.querySelector(".net-weight")?.value
         ) || 0;
 
-    const rate =
-        parseFloat(
-            row.querySelector(".rate")?.value
-        ) || 0;
-
     const makingPerGram =
         parseFloat(
             row.querySelector(".making")?.value
         ) || 0;
 
+    const rateField =
+        row.querySelector(".rate");
+
+
+    let rate = 0;
 
     let purityMultiplier = 1;
 
 
     // ============================================
-    // SILVER PURITY
+    // GOLD RATE
     // ============================================
 
-    if (metal === "Silver") {
+    if (metal === "Gold") {
+
+        rate =
+            getGoldRateByPurity(purity);
+
+
+        if (rateField) {
+
+            rateField.value =
+                rate > 0
+                    ? rate.toFixed(2)
+                    : "";
+
+        }
+
+    }
+
+
+    // ============================================
+    // SILVER RATE + PURITY
+    // ============================================
+
+    else if (metal === "Silver") {
+
+        rate =
+            parseFloat(
+                rateField?.value
+            ) || 0;
+
 
         if (purity === "100%") {
 
@@ -191,7 +351,6 @@ function calculateRow(row) {
 
 
     calculateBillTotal();
-
 }
 
 
@@ -283,7 +442,6 @@ function calculateBillTotal() {
 
 
     calculateBalance();
-
 }
 
 
@@ -326,7 +484,6 @@ function calculateBalance() {
             balance.toFixed(2);
 
     }
-
 }
 
 
@@ -387,8 +544,20 @@ function addRow() {
                 onchange="calculateRow(this.closest('tr'))"
             >
 
-                <option value="22K">
+                <option value="24K">
+                    Gold 24K
+                </option>
+
+                <option value="22K" selected>
                     Gold 22K
+                </option>
+
+                <option value="21K">
+                    Gold 21K
+                </option>
+
+                <option value="20K">
+                    Gold 20K
                 </option>
 
                 <option value="18K">
@@ -431,11 +600,11 @@ function addRow() {
 
             <input
                 type="number"
-                class="rate"
-                placeholder="₹ / gram"
+                class="rate gold-auto-rate"
+                placeholder="Auto Rate"
                 step="0.01"
                 min="0"
-                oninput="calculateRow(this.closest('tr'))"
+                readonly
             >
 
         </td>
@@ -484,6 +653,8 @@ function addRow() {
 
     body.appendChild(row);
 
+
+    calculateRow(row);
 }
 
 
@@ -514,7 +685,6 @@ function removeRow(button) {
 
 
     calculateBillTotal();
-
 }
 
 
@@ -549,6 +719,36 @@ async function saveBill() {
 
         alert(
             "Customer Name enter kariye."
+        );
+
+        return;
+
+    }
+
+
+    const goldRows =
+        Array.from(
+            document.querySelectorAll(".item-row")
+        ).filter(function (row) {
+
+            return (
+                row.querySelector(".metal")?.value === "Gold" &&
+                row.querySelector(".item-name")?.value.trim() !== ""
+            );
+
+        });
+
+
+    const gold24Rate =
+        parseFloat(
+            document.getElementById("gold_24k_rate")?.value
+        ) || 0;
+
+
+    if (goldRows.length > 0 && gold24Rate <= 0) {
+
+        alert(
+            "Gold item ke liye 24K Gold Rate enter kariye."
         );
 
         return;
@@ -803,5 +1003,4 @@ async function saveBill() {
         );
 
     }
-
 }

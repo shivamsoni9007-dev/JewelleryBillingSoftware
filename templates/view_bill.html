@@ -21,6 +21,8 @@ body {
     color: #2f1d14;
 }
 
+/* ACTION BUTTONS */
+
 .actions {
     text-align: center;
     margin-bottom: 16px;
@@ -31,7 +33,7 @@ body {
     display: inline-block;
     border: none;
     text-decoration: none;
-    padding: 10px 17px;
+    padding: 10px 16px;
     margin: 3px;
     border-radius: 6px;
     font-size: 13px;
@@ -49,10 +51,17 @@ body {
     color: white;
 }
 
+.sms-btn {
+    background: #2563eb;
+    color: white;
+}
+
 .print-btn {
     background: #b68b32;
     color: white;
 }
+
+/* INVOICE */
 
 .invoice {
     width: 210mm;
@@ -64,8 +73,7 @@ body {
     box-shadow: 0 8px 28px rgba(0,0,0,.15);
 }
 
-
-/* ================= HEADER ================= */
+/* HEADER */
 
 .header {
     display: grid;
@@ -122,8 +130,7 @@ body {
     font-weight: bold;
 }
 
-
-/* ================= DETAILS ================= */
+/* CUSTOMER DETAILS */
 
 .details {
     margin-top: 12px;
@@ -146,8 +153,7 @@ body {
     color: #7b101a;
 }
 
-
-/* ================= ITEMS ================= */
+/* ITEMS */
 
 table {
     width: 100%;
@@ -183,8 +189,7 @@ th:nth-child(5) { width: 16%; }
 th:nth-child(6) { width: 16%; }
 th:nth-child(7) { width: 17%; }
 
-
-/* ================= BILL BOXES ================= */
+/* PAYMENT + TOTAL */
 
 .info-grid {
     display: grid;
@@ -225,8 +230,7 @@ th:nth-child(7) { width: 17%; }
     padding-top: 7px;
 }
 
-
-/* ================= PENDING ================= */
+/* PENDING */
 
 .pending-box {
     margin-top: 13px;
@@ -274,8 +278,7 @@ th:nth-child(7) { width: 17%; }
     font-size: 17px;
 }
 
-
-/* ================= BOTTOM ================= */
+/* TERMS */
 
 .bottom-grid {
     display: grid;
@@ -329,8 +332,7 @@ th:nth-child(7) { width: 17%; }
     font-size: 10.5px;
 }
 
-
-/* ================= PRINT ================= */
+/* PRINT */
 
 @page {
     size: A4;
@@ -396,73 +398,61 @@ th:nth-child(7) { width: 17%; }
 </style>
 </head>
 
-
 <body>
-
-
-<!-- ================= BUTTONS ================= -->
 
 <div class="actions">
 
     {% if not public_view %}
 
-        <a
-            href="{{ url_for('dashboard') }}"
-            class="main-btn"
-        >
+        <a href="{{ url_for('dashboard') }}" class="main-btn">
             Dashboard
         </a>
 
-        <a
-            href="{{ url_for('bills') }}"
-            class="main-btn"
-        >
+        <a href="{{ url_for('bills') }}" class="main-btn">
             Bill History
         </a>
 
         {% if whatsapp_url %}
-
             <a
                 href="{{ whatsapp_url }}"
                 target="_blank"
                 class="whatsapp-btn"
             >
-                Send Bill on WhatsApp
+                WhatsApp
             </a>
+        {% endif %}
 
+        {% if sms_url %}
+            <a
+                href="{{ sms_url }}"
+                class="sms-btn"
+            >
+                Send via SMS
+            </a>
         {% endif %}
 
     {% endif %}
 
-    <button
-        onclick="window.print()"
-        class="print-btn"
-    >
+    <button onclick="window.print()" class="print-btn">
         Print Invoice
     </button>
 
 </div>
 
 
-<!-- ================= INVOICE ================= -->
-
 <div class="invoice">
-
 
     <!-- HEADER -->
 
     <div class="header">
 
         <div>
-
             <img
                 src="{{ url_for('static', filename='images/shop-logo.png') }}"
                 class="logo"
                 alt="Logo"
             >
-
         </div>
-
 
         <div class="brand">
 
@@ -479,19 +469,14 @@ th:nth-child(7) { width: 17%; }
             </div>
 
             <div class="address">
-
                 हर्रायपुर आलमचंद, कौशांबी
-
                 <br>
-
                 Proprietors:
                 Rajesh Kumar Soni |
                 Umesh Kumar Soni
-
             </div>
 
         </div>
-
 
         <div class="invoice-tag">
             TAX INVOICE
@@ -533,24 +518,13 @@ th:nth-child(7) { width: 17%; }
 
 
         <div class="detail">
-
             <strong>Customer</strong>
-
-            <span>
-                {{ bill["customer_name"] }}
-            </span>
-
+            <span>{{ bill["customer_name"] }}</span>
         </div>
 
-
         <div class="detail">
-
             <strong>Mobile</strong>
-
-            <span>
-                {{ bill["customer_mobile"] or "-" }}
-            </span>
-
+            <span>{{ bill["customer_mobile"] or "-" }}</span>
         </div>
 
     </div>
@@ -563,7 +537,6 @@ th:nth-child(7) { width: 17%; }
         <thead>
 
         <tr>
-
             <th>Item</th>
             <th>Purity</th>
             <th>Gross Wt.</th>
@@ -571,11 +544,9 @@ th:nth-child(7) { width: 17%; }
             <th>Rate ₹/g</th>
             <th>Making ₹/g</th>
             <th>Amount ₹</th>
-
         </tr>
 
         </thead>
-
 
         <tbody>
 
@@ -583,26 +554,16 @@ th:nth-child(7) { width: 17%; }
 
         <tr>
 
-            <td>
-                {{ item["item_name"] }}
-            </td>
+            <td>{{ item["item_name"] }}</td>
+
+            <td>{{ item["purity"] }}</td>
 
             <td>
-                {{ item["purity"] }}
-            </td>
-
-            <td>
-
                 {% if item["gross_weight"] and item["gross_weight"] > 0 %}
-
                     {{ "%.3f"|format(item["gross_weight"]) }}
-
                 {% else %}
-
                     —
-
                 {% endif %}
-
             </td>
 
             <td>
@@ -630,7 +591,7 @@ th:nth-child(7) { width: 17%; }
     </table>
 
 
-    <!-- PAYMENT + SUMMARY -->
+    <!-- PAYMENT -->
 
     <div class="info-grid">
 
@@ -641,35 +602,22 @@ th:nth-child(7) { width: 17%; }
             </div>
 
             <div class="row">
-
                 <span>Payment Mode</span>
-
-                <strong>
-                    {{ bill["payment_mode"] or "-" }}
-                </strong>
-
+                <strong>{{ bill["payment_mode"] or "-" }}</strong>
             </div>
 
-
             <div class="row">
-
                 <span>Amount Paid</span>
-
                 <strong>
                     ₹{{ "%.2f"|format(bill["amount_paid"] or 0) }}
                 </strong>
-
             </div>
 
-
             <div class="row">
-
                 <span>Current Bill Due</span>
-
                 <strong>
                     ₹{{ "%.2f"|format(current_due or 0) }}
                 </strong>
-
             </div>
 
         </div>
@@ -681,48 +629,32 @@ th:nth-child(7) { width: 17%; }
                 Bill Summary
             </div>
 
-
             <div class="row">
-
                 <span>Subtotal</span>
-
                 <strong>
                     ₹{{ "%.2f"|format(bill["subtotal"] or 0) }}
                 </strong>
-
             </div>
 
-
             <div class="row">
-
                 <span>Discount</span>
-
                 <strong>
                     ₹{{ "%.2f"|format(bill["discount"] or 0) }}
                 </strong>
-
             </div>
 
-
             <div class="row">
-
                 <span>GST</span>
-
                 <strong>
                     ₹{{ "%.2f"|format(bill["gst"] or 0) }}
                 </strong>
-
             </div>
 
-
             <div class="row grand-total">
-
                 <span>Grand Total</span>
-
                 <span>
                     ₹{{ "%.2f"|format(bill["grand_total"] or 0) }}
                 </span>
-
             </div>
 
         </div>
@@ -730,7 +662,7 @@ th:nth-child(7) { width: 17%; }
     </div>
 
 
-    <!-- PENDING SECTION -->
+    <!-- PENDING -->
 
     <div class="pending-box">
 
@@ -738,9 +670,7 @@ th:nth-child(7) { width: 17%; }
             Customer Pending Summary
         </div>
 
-
         <div class="pending-grid">
-
 
             <div class="pending-item">
 
@@ -749,9 +679,7 @@ th:nth-child(7) { width: 17%; }
                 </div>
 
                 <div class="pending-value">
-
                     ₹{{ "%.2f"|format(previous_pending or 0) }}
-
                 </div>
 
             </div>
@@ -764,9 +692,7 @@ th:nth-child(7) { width: 17%; }
                 </div>
 
                 <div class="pending-value">
-
                     ₹{{ "%.2f"|format(current_due or 0) }}
-
                 </div>
 
             </div>
@@ -779,20 +705,17 @@ th:nth-child(7) { width: 17%; }
                 </div>
 
                 <div class="pending-value total-pending">
-
                     ₹{{ "%.2f"|format(total_pending or 0) }}
-
                 </div>
 
             </div>
-
 
         </div>
 
     </div>
 
 
-    <!-- TERMS + SIGNATURE -->
+    <!-- TERMS -->
 
     <div class="bottom-grid">
 
@@ -803,15 +726,12 @@ th:nth-child(7) { width: 17%; }
             </div>
 
             1. बिके हुए आभूषण 7 दिन तक बदले जा सकते हैं।
-
             <br>
 
             2. आभूषण की चमक खराब न हो, पर्ची साथ लाना आवश्यक है।
-
             <br>
 
             3. भाव की जिम्मेदारी ग्राहक की होगी।
-
             <br>
 
             4. माल वापसी के समय पर्ची साथ लाना आवश्यक है।
@@ -836,12 +756,9 @@ th:nth-child(7) { width: 17%; }
     </div>
 
 
-    <!-- FOOTER -->
-
     <div class="footer">
         !! शुद्धता हमारी पहचान, विश्वास आपका !!
     </div>
-
 
 </div>
 

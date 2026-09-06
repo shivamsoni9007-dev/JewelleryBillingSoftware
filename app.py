@@ -106,12 +106,15 @@ def clean_mobile_number(mobile):
         if ch.isdigit()
     )
 
-    # Indian 10 digit mobile
+    # 10 digit Indian number
     if len(digits) == 10:
         return "91" + digits
 
-    # Already has 91
-    if len(digits) == 12 and digits.startswith("91"):
+    # Already contains India code
+    if (
+        len(digits) == 12
+        and digits.startswith("91")
+    ):
         return digits
 
     return digits
@@ -154,7 +157,9 @@ def get_bill_pending_details(
 
     current_row = conn.execute("""
         SELECT balance
+
         FROM bills
+
         WHERE id = ?
     """, (
         bill_id,
@@ -164,13 +169,15 @@ def get_bill_pending_details(
         previous_row["total"] or 0
     )
 
-    current_due = float(
-        current_row["balance"] or 0
-    ) if current_row else 0
+    current_due = (
+        float(current_row["balance"] or 0)
+        if current_row
+        else 0
+    )
 
     total_pending = (
-        previous_pending +
-        current_due
+        previous_pending
+        + current_due
     )
 
     return {
@@ -196,6 +203,7 @@ def get_bill_pending_details(
 def login():
 
     if session.get("logged_in"):
+
         return redirect(
             url_for("dashboard")
         )
@@ -288,6 +296,7 @@ def dashboard():
                 SUM(grand_total),
                 0
             ) AS total
+
         FROM bills
     """).fetchone()["total"]
 
@@ -319,23 +328,19 @@ def dashboard():
     return render_template(
         "dashboard.html",
 
-        total_bills=
-            total_bills,
+        total_bills=total_bills,
 
-        total_sales=
-            round(
-                float(total_sales),
-                2
-            ),
+        total_sales=round(
+            float(total_sales),
+            2
+        ),
 
-        total_customers=
-            total_customers,
+        total_customers=total_customers,
 
-        total_due=
-            round(
-                float(total_due),
-                2
-            )
+        total_due=round(
+            float(total_due),
+            2
+        )
     )
 
 
@@ -383,7 +388,6 @@ def new_bill():
 
 # =========================================================
 # CUSTOMER PENDING API
-# Mobile enter karte hi previous pending mil jayega
 # =========================================================
 
 @app.route(
@@ -424,8 +428,7 @@ def customer_pending(mobile):
 
         "success": True,
 
-        "mobile":
-            mobile,
+        "mobile": mobile,
 
         "customer_name":
             row["customer_name"] or "",
@@ -527,6 +530,9 @@ def save_bill():
             []
         )
 
+
+        # ================= VALIDATION =================
+
         if not bill_no:
 
             return jsonify({
@@ -559,13 +565,19 @@ def save_bill():
                     "Amount Paid Grand Total se jyada nahi ho sakta."
             })
 
+
+        # ================= BALANCE =================
+
         balance = (
-            grand_total -
-            amount_paid
+            grand_total
+            - amount_paid
         )
 
         if balance < 0:
             balance = 0
+
+
+        # ================= DATABASE =================
 
         conn = get_db_connection()
 
@@ -586,6 +598,9 @@ def save_bill():
                 "message":
                     "Ye Bill Number pehle se use ho chuka hai."
             })
+
+
+        # ================= INSERT BILL =================
 
         cursor = conn.execute("""
             INSERT INTO bills (
@@ -640,6 +655,9 @@ def save_bill():
         ))
 
         bill_id = cursor.lastrowid
+
+
+        # ================= INSERT ITEMS =================
 
         for item in items:
 
@@ -725,6 +743,9 @@ def save_bill():
 
         conn.commit()
 
+
+        # ================= PENDING =================
+
         pending_data = (
             get_bill_pending_details(
                 conn,
@@ -732,6 +753,7 @@ def save_bill():
                 bill_id
             )
         )
+
 
         return jsonify({
 
@@ -759,10 +781,10 @@ def save_bill():
                 ]
         })
 
+
     except Exception as e:
 
         if conn:
-
             conn.rollback()
 
         print(
@@ -779,6 +801,7 @@ def save_bill():
                 + str(e)
 
         }), 500
+
 
     finally:
 
@@ -928,7 +951,7 @@ def export_bills():
 
 
 # =========================================================
-# VIEW BILL - ADMIN
+# VIEW BILL
 # =========================================================
 
 @app.route(
@@ -949,6 +972,7 @@ def view_bill(bill_id):
         bill_id,
     )).fetchone()
 
+
     if bill is None:
 
         conn.close()
@@ -957,6 +981,7 @@ def view_bill(bill_id):
             "Bill not found",
             404
         )
+
 
     items = conn.execute("""
         SELECT *
@@ -967,6 +992,7 @@ def view_bill(bill_id):
     """, (
         bill_id,
     )).fetchall()
+
 
     payments = conn.execute("""
         SELECT *
@@ -981,9 +1007,9 @@ def view_bill(bill_id):
     )).fetchall()
 
 
-    # -----------------------------------------------------
-    # PENDING
-    # -----------------------------------------------------
+    # =====================================================
+    # PENDING DETAILS
+    # =====================================================
 
     pending_data = (
         get_bill_pending_details(
@@ -994,9 +1020,9 @@ def view_bill(bill_id):
     )
 
 
-    # -----------------------------------------------------
-    # PUBLIC BILL TOKEN
-    # -----------------------------------------------------
+    # =====================================================
+    # SECURE PUBLIC BILL LINK
+    # =====================================================
 
     token = bill_serializer.dumps({
         "bill_id": bill_id
@@ -1010,9 +1036,9 @@ def view_bill(bill_id):
     )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # WHATSAPP
-    # -----------------------------------------------------
+    # =====================================================
 
     whatsapp_number = (
         clean_mobile_number(
@@ -1021,14 +1047,25 @@ def view_bill(bill_id):
     )
 
     whatsapp_message = (
-        "🙏 Shree Ram Kumar Jewellers\n\n"
+
+        "Shree Ram Kumar Jewellers\n\n"
+
         f"Bill No: {bill['bill_no']}\n"
+
         f"Customer: {bill['customer_name']}\n"
-        f"Bill Amount: ₹{float(bill['grand_total'] or 0):.2f}\n"
-        f"Paid: ₹{float(bill['amount_paid'] or 0):.2f}\n"
-        f"Current Due: ₹{float(bill['balance'] or 0):.2f}\n"
-        f"Total Pending: ₹{pending_data['total_pending']:.2f}\n\n"
+
+        f"Bill Amount: Rs.{float(bill['grand_total'] or 0):.2f}\n"
+
+        f"Paid: Rs.{float(bill['amount_paid'] or 0):.2f}\n"
+
+        f"Current Due: Rs.{float(bill['balance'] or 0):.2f}\n"
+
+        f"Previous Pending: Rs.{pending_data['previous_pending']:.2f}\n"
+
+        f"Total Pending: Rs.{pending_data['total_pending']:.2f}\n\n"
+
         f"View Bill:\n{public_bill_url}\n\n"
+
         "Thank you for shopping with us."
     )
 
@@ -1045,7 +1082,58 @@ def view_bill(bill_id):
             )
         )
 
+
+    # =====================================================
+    # SMS
+    # =====================================================
+
+    sms_message = (
+
+        "Shree Ram Kumar Jewellers\n"
+
+        f"Bill No: {bill['bill_no']}\n"
+
+        f"Customer: {bill['customer_name']}\n"
+
+        f"Total: Rs.{float(bill['grand_total'] or 0):.2f}\n"
+
+        f"Paid: Rs.{float(bill['amount_paid'] or 0):.2f}\n"
+
+        f"Current Due: Rs.{float(bill['balance'] or 0):.2f}\n"
+
+        f"Total Pending: Rs.{pending_data['total_pending']:.2f}\n"
+
+        f"Bill: {public_bill_url}\n"
+
+        "Thank you - Shree Ram Kumar Jewellers"
+    )
+
+    sms_url = ""
+
+    if bill["customer_mobile"]:
+
+        sms_number = "".join(
+            ch
+            for ch in str(
+                bill["customer_mobile"]
+            )
+            if ch.isdigit()
+        )
+
+        if sms_number:
+
+            sms_url = (
+                "sms:"
+                + sms_number
+                + "?body="
+                + quote(
+                    sms_message
+                )
+            )
+
+
     conn.close()
+
 
     return render_template(
 
@@ -1076,13 +1164,18 @@ def view_bill(bill_id):
             public_bill_url,
 
         whatsapp_url=
-            whatsapp_url
+            whatsapp_url,
+
+        sms_url=
+            sms_url,
+
+        public_view=False
     )
 
 
 # =========================================================
 # PUBLIC BILL
-# Customer ko login ki zarurat nahi
+# Customer can open without login
 # =========================================================
 
 @app.route(
@@ -1208,6 +1301,8 @@ def public_bill(
             request.url,
 
         whatsapp_url="",
+
+        sms_url="",
 
         public_view=True
     )
@@ -1354,6 +1449,7 @@ def customer_detail(mobile):
         mobile,
     )).fetchall()
 
+
     if not customer_bills:
 
         conn.close()
@@ -1362,6 +1458,7 @@ def customer_detail(mobile):
             "Customer not found",
             404
         )
+
 
     total_purchase = sum(
 
@@ -1374,6 +1471,7 @@ def customer_detail(mobile):
         in customer_bills
     )
 
+
     total_paid = sum(
 
         float(
@@ -1384,6 +1482,7 @@ def customer_detail(mobile):
         for bill
         in customer_bills
     )
+
 
     total_balance = sum(
 
@@ -1396,13 +1495,16 @@ def customer_detail(mobile):
         in customer_bills
     )
 
+
     customer_name = (
         customer_bills[0][
             "customer_name"
         ]
     )
 
+
     conn.close()
+
 
     return render_template(
 
@@ -1464,6 +1566,7 @@ def receive_payment(bill_id):
             ).strip()
         )
 
+
         if amount <= 0:
 
             return (
@@ -1471,7 +1574,9 @@ def receive_payment(bill_id):
                 400
             )
 
+
         conn = get_db_connection()
+
 
         bill = conn.execute("""
             SELECT *
@@ -1483,12 +1588,14 @@ def receive_payment(bill_id):
             bill_id,
         )).fetchone()
 
+
         if bill is None:
 
             return (
                 "Bill not found",
                 404
             )
+
 
         current_balance = float(
             bill["balance"]
@@ -1499,6 +1606,7 @@ def receive_payment(bill_id):
             bill["amount_paid"]
             or 0
         )
+
 
         if current_balance <= 0:
 
@@ -1512,6 +1620,7 @@ def receive_payment(bill_id):
                 )
             )
 
+
         if amount > current_balance:
 
             return (
@@ -1519,19 +1628,21 @@ def receive_payment(bill_id):
                 400
             )
 
+
         new_paid = (
-            current_paid +
-            amount
+            current_paid
+            + amount
         )
 
         new_balance = (
-            current_balance -
-            amount
+            current_balance
+            - amount
         )
 
         if new_balance < 0.01:
 
             new_balance = 0
+
 
         conn.execute("""
             UPDATE bills
@@ -1548,6 +1659,7 @@ def receive_payment(bill_id):
             new_balance,
             bill_id
         ))
+
 
         conn.execute("""
             INSERT INTO payments (
@@ -1580,13 +1692,16 @@ def receive_payment(bill_id):
             note
         ))
 
+
         conn.commit()
+
 
         mobile = (
             bill[
                 "customer_mobile"
             ]
         )
+
 
         return redirect(
             url_for(
@@ -1595,10 +1710,10 @@ def receive_payment(bill_id):
             )
         )
 
+
     except Exception as e:
 
         if conn:
-
             conn.rollback()
 
         print(
@@ -1611,6 +1726,7 @@ def receive_payment(bill_id):
             + str(e),
             500
         )
+
 
     finally:
 

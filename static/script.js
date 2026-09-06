@@ -1,11 +1,11 @@
 // =====================================================
-// DATE
+// PAGE LOAD
 // =====================================================
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const dateField =
-        document.getElementById("bill_date");
+    // Today's date
+    const dateField = document.getElementById("bill_date");
 
     if (dateField) {
 
@@ -13,73 +13,160 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const yyyy = today.getFullYear();
 
-        const mm =
-            String(today.getMonth() + 1)
-                .padStart(2, "0");
+        const mm = String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
 
-        const dd =
-            String(today.getDate())
-                .padStart(2, "0");
+        const dd = String(
+            today.getDate()
+        ).padStart(2, "0");
 
         dateField.value =
             `${yyyy}-${mm}-${dd}`;
     }
 
-    updateAllGoldRates();
+
+    // Make sure first row is Gold correctly
+    document
+        .querySelectorAll(".item-row")
+        .forEach(function (row) {
+
+            const metal =
+                row.querySelector(".metal");
+
+            if (metal) {
+                metalChanged(metal);
+            }
+
+        });
+
+
+    updateAllMetalRates();
 
     calculateBillTotal();
 });
 
 
 // =====================================================
-// GOLD RATE FROM 24K
+// GOLD RATE
+// User enters 24K rate for 10 grams
+// Output = selected purity rate per gram
 // =====================================================
 
 function getGoldRateByPurity(purity) {
 
-    // User enters 24K market rate for 10 grams
-    const gold24Rate10Gram =
+    const goldRate10Gram =
         parseFloat(
             document.getElementById("gold_24k_rate")?.value
         ) || 0;
 
+
+    if (goldRate10Gram <= 0) {
+        return 0;
+    }
+
+
     const karatMap = {
+
         "24K": 24,
         "22K": 22,
         "21K": 21,
         "20K": 20,
         "18K": 18
+
     };
 
-    const karat = karatMap[purity];
 
-    if (!karat || gold24Rate10Gram <= 0) {
+    const karat =
+        karatMap[purity] || 0;
+
+
+    if (karat <= 0) {
         return 0;
     }
 
-    // Convert 10 gram 24K rate to per gram
+
+    // 10 gram rate -> 1 gram 24K rate
     const gold24PerGram =
-        gold24Rate10Gram / 10;
+        goldRate10Gram / 10;
 
-    // Calculate selected purity per gram rate
-    return gold24PerGram * karat / 24;
-}
 
-    return gold24Rate * karat / 24;
+    // Selected purity per gram rate
+    const purityRate =
+        gold24PerGram *
+        (karat / 24);
+
+
+    return purityRate;
 }
 
 
 // =====================================================
-// UPDATE GOLD RATE PREVIEW + ALL GOLD ROWS
+// SILVER RATE
+// User enters Silver rate for 1 KG = 1000 grams
+// Output = selected purity rate per gram
 // =====================================================
 
-function updateAllGoldRates() {
+function getSilverRateByPurity(purity) {
 
-    const purities =
+    const silverRate1Kg =
+        parseFloat(
+            document.getElementById("silver_1kg_rate")?.value
+        ) || 0;
+
+
+    if (silverRate1Kg <= 0) {
+        return 0;
+    }
+
+
+    // 1 KG = 1000 grams
+    const silverPerGram =
+        silverRate1Kg / 1000;
+
+
+    let purityMultiplier = 1;
+
+
+    if (purity === "95%") {
+
+        purityMultiplier = 0.95;
+
+    }
+
+    else if (purity === "90%") {
+
+        purityMultiplier = 0.90;
+
+    }
+
+    else {
+
+        purityMultiplier = 1;
+
+    }
+
+
+    return silverPerGram *
+        purityMultiplier;
+}
+
+
+// =====================================================
+// UPDATE ALL METAL RATE PREVIEWS
+// =====================================================
+
+function updateAllMetalRates() {
+
+    // ===========================
+    // GOLD PREVIEW
+    // ===========================
+
+    const goldPurities =
         ["24K", "22K", "21K", "20K", "18K"];
 
 
-    purities.forEach(function (purity) {
+    goldPurities.forEach(function (purity) {
 
         const rate =
             getGoldRateByPurity(purity);
@@ -87,33 +174,92 @@ function updateAllGoldRates() {
 
         const preview =
             document.getElementById(
-                "preview_" + purity.toLowerCase()
+                "preview_" +
+                purity.toLowerCase()
             );
 
 
         if (preview) {
 
             preview.textContent =
-                "₹" + rate.toFixed(2);
+                "₹" +
+                rate.toFixed(2) +
+                "/g";
 
         }
 
     });
 
 
+    // ===========================
+    // SILVER PREVIEW
+    // ===========================
+
+    const silver100 =
+        getSilverRateByPurity("100%");
+
+    const silver95 =
+        getSilverRateByPurity("95%");
+
+    const silver90 =
+        getSilverRateByPurity("90%");
+
+
+    const preview100 =
+        document.getElementById(
+            "preview_silver_100"
+        );
+
+    const preview95 =
+        document.getElementById(
+            "preview_silver_95"
+        );
+
+    const preview90 =
+        document.getElementById(
+            "preview_silver_90"
+        );
+
+
+    if (preview100) {
+
+        preview100.textContent =
+            "₹" +
+            silver100.toFixed(2) +
+            "/g";
+
+    }
+
+
+    if (preview95) {
+
+        preview95.textContent =
+            "₹" +
+            silver95.toFixed(2) +
+            "/g";
+
+    }
+
+
+    if (preview90) {
+
+        preview90.textContent =
+            "₹" +
+            silver90.toFixed(2) +
+            "/g";
+
+    }
+
+
+    // ===========================
+    // RECALCULATE ALL ROWS
+    // ===========================
+
     document
         .querySelectorAll(".item-row")
         .forEach(function (row) {
 
-            const metal =
-                row.querySelector(".metal")?.value;
-
-
-            if (metal === "Gold") {
-
-                calculateRow(row);
-
-            }
+            calculateRow(row);
 
         });
 }
@@ -128,6 +274,12 @@ function metalChanged(selectElement) {
     const row =
         selectElement.closest("tr");
 
+
+    if (!row) {
+        return;
+    }
+
+
     const purity =
         row.querySelector(".purity");
 
@@ -138,46 +290,16 @@ function metalChanged(selectElement) {
         selectElement.value;
 
 
-    purity.innerHTML = "";
-
-
-    if (metal === "Silver") {
-
-        purity.innerHTML = `
-
-            <option value="100%">
-                Silver 100%
-            </option>
-
-            <option value="95%">
-                Silver 95%
-            </option>
-
-            <option value="90%">
-                Silver 90%
-            </option>
-
-        `;
-
-
-        if (rateField) {
-
-            rateField.readOnly = false;
-
-            rateField.value = "";
-
-            rateField.placeholder =
-                "₹ / gram";
-
-            rateField.classList.remove(
-                "gold-auto-rate"
-            );
-
-        }
-
+    if (!purity) {
+        return;
     }
 
-    else {
+
+    // =================================================
+    // GOLD
+    // =================================================
+
+    if (metal === "Gold") {
 
         purity.innerHTML = `
 
@@ -203,19 +325,45 @@ function metalChanged(selectElement) {
 
         `;
 
+    }
 
-        if (rateField) {
 
-            rateField.readOnly = true;
+    // =================================================
+    // SILVER
+    // =================================================
 
-            rateField.placeholder =
-                "Auto Rate";
+    else if (metal === "Silver") {
 
-            rateField.classList.add(
-                "gold-auto-rate"
-            );
+        purity.innerHTML = `
 
-        }
+            <option value="100%" selected>
+                Silver 100%
+            </option>
+
+            <option value="95%">
+                Silver 95%
+            </option>
+
+            <option value="90%">
+                Silver 90%
+            </option>
+
+        `;
+
+    }
+
+
+    // Rate always auto calculated
+    if (rateField) {
+
+        rateField.readOnly = true;
+
+        rateField.placeholder =
+            "Auto Rate";
+
+        rateField.classList.add(
+            "auto-rate"
+        );
 
     }
 
@@ -230,108 +378,108 @@ function metalChanged(selectElement) {
 
 function calculateRow(row) {
 
+    if (!row) {
+        return;
+    }
+
+
     const metal =
-        row.querySelector(".metal")?.value || "Gold";
+        row.querySelector(".metal")?.value ||
+        "Gold";
+
 
     const purity =
-        row.querySelector(".purity")?.value || "";
+        row.querySelector(".purity")?.value ||
+        "";
+
 
     const netWeight =
         parseFloat(
             row.querySelector(".net-weight")?.value
         ) || 0;
 
+
     const makingPerGram =
         parseFloat(
             row.querySelector(".making")?.value
         ) || 0;
 
+
     const rateField =
         row.querySelector(".rate");
 
 
-    let rate = 0;
-
-    let purityMultiplier = 1;
+    let ratePerGram = 0;
 
 
-    // ============================================
-    // GOLD RATE
-    // ============================================
+    // =================================================
+    // GOLD AUTO RATE
+    // =================================================
 
     if (metal === "Gold") {
 
-        rate =
+        ratePerGram =
             getGoldRateByPurity(purity);
-
-
-        if (rateField) {
-
-            rateField.value =
-                rate > 0
-                    ? rate.toFixed(2)
-                    : "";
-
-        }
 
     }
 
 
-    // ============================================
-    // SILVER RATE + PURITY
-    // ============================================
+    // =================================================
+    // SILVER AUTO RATE
+    // =================================================
 
     else if (metal === "Silver") {
 
-        rate =
-            parseFloat(
-                rateField?.value
-            ) || 0;
+        ratePerGram =
+            getSilverRateByPurity(purity);
+
+    }
 
 
-        if (purity === "100%") {
+    // =================================================
+    // SHOW RATE
+    // =================================================
 
-            purityMultiplier = 1;
+    if (rateField) {
+
+        if (ratePerGram > 0) {
+
+            rateField.value =
+                ratePerGram.toFixed(2);
 
         }
 
-        else if (purity === "95%") {
+        else {
 
-            purityMultiplier = 0.95;
-
-        }
-
-        else if (purity === "90%") {
-
-            purityMultiplier = 0.90;
+            rateField.value = "";
 
         }
 
     }
 
 
-    // ============================================
-    // METAL AMOUNT
-    // ============================================
+    // =================================================
+    // METAL VALUE
+    // =================================================
 
     const metalAmount =
         netWeight *
-        rate *
-        purityMultiplier;
+        ratePerGram;
 
 
-    // ============================================
-    // MAKING PER GRAM
-    // ============================================
+    // =================================================
+    // MAKING CHARGE
+    // Making always per gram
+    // =================================================
 
     const makingAmount =
         netWeight *
         makingPerGram;
 
 
-    // ============================================
+    // =================================================
     // ITEM TOTAL
-    // ============================================
+    // =================================================
 
     const itemTotal =
         metalAmount +
@@ -368,7 +516,8 @@ function calculateBillTotal() {
         .forEach(function (field) {
 
             subtotal +=
-                parseFloat(field.value) || 0;
+                parseFloat(field.value) ||
+                0;
 
         });
 
@@ -386,7 +535,8 @@ function calculateBillTotal() {
 
 
     let taxableAmount =
-        subtotal - discount;
+        subtotal -
+        discount;
 
 
     if (taxableAmount < 0) {
@@ -414,7 +564,9 @@ function calculateBillTotal() {
         document.getElementById("gst");
 
     const grandTotalField =
-        document.getElementById("grand_total");
+        document.getElementById(
+            "grand_total"
+        );
 
 
     if (subtotalField) {
@@ -464,7 +616,8 @@ function calculateBalance() {
 
 
     let balance =
-        grandTotal - amountPaid;
+        grandTotal -
+        amountPaid;
 
 
     if (balance < 0) {
@@ -475,7 +628,9 @@ function calculateBalance() {
 
 
     const balanceField =
-        document.getElementById("balance");
+        document.getElementById(
+            "balance"
+        );
 
 
     if (balanceField) {
@@ -488,20 +643,28 @@ function calculateBalance() {
 
 
 // =====================================================
-// ADD NEW ITEM ROW
+// ADD NEW ITEM
 // =====================================================
 
 function addRow() {
 
     const body =
-        document.getElementById("itemsBody");
+        document.getElementById(
+            "itemsBody"
+        );
+
+
+    if (!body) {
+        return;
+    }
 
 
     const row =
         document.createElement("tr");
 
 
-    row.className = "item-row";
+    row.className =
+        "item-row";
 
 
     row.innerHTML = `
@@ -524,11 +687,16 @@ function addRow() {
                 onchange="metalChanged(this)"
             >
 
-                <option value="Gold">
+                <option
+                    value="Gold"
+                    selected
+                >
                     Gold
                 </option>
 
-                <option value="Silver">
+                <option
+                    value="Silver"
+                >
                     Silver
                 </option>
 
@@ -548,7 +716,10 @@ function addRow() {
                     Gold 24K
                 </option>
 
-                <option value="22K" selected>
+                <option
+                    value="22K"
+                    selected
+                >
                     Gold 22K
                 </option>
 
@@ -600,7 +771,7 @@ function addRow() {
 
             <input
                 type="number"
-                class="rate gold-auto-rate"
+                class="rate auto-rate"
                 placeholder="Auto Rate"
                 step="0.01"
                 min="0"
@@ -665,7 +836,9 @@ function addRow() {
 function removeRow(button) {
 
     const rows =
-        document.querySelectorAll(".item-row");
+        document.querySelectorAll(
+            ".item-row"
+        );
 
 
     if (rows.length <= 1) {
@@ -697,22 +870,22 @@ async function saveBill() {
     const billNo =
         document
             .getElementById("bill_no")
-            .value
-            .trim();
+            ?.value
+            .trim() || "";
 
 
     const customerName =
         document
             .getElementById("customer_name")
-            .value
-            .trim();
+            ?.value
+            .trim() || "";
 
 
     const customerMobile =
         document
             .getElementById("customer_mobile")
-            .value
-            .trim();
+            ?.value
+            .trim() || "";
 
 
     if (!customerName) {
@@ -726,42 +899,12 @@ async function saveBill() {
     }
 
 
-    const goldRows =
-        Array.from(
-            document.querySelectorAll(".item-row")
-        ).filter(function (row) {
-
-            return (
-                row.querySelector(".metal")?.value === "Gold" &&
-                row.querySelector(".item-name")?.value.trim() !== ""
-            );
-
-        });
-
-
-    const gold24Rate =
-        parseFloat(
-            document.getElementById("gold_24k_rate")?.value
-        ) || 0;
-
-
-    if (goldRows.length > 0 && gold24Rate <= 0) {
-
-        alert(
-            "Gold item ke liye 24K Gold Rate enter kariye."
-        );
-
-        return;
-
-    }
-
-
-    // ===============================================
-    // ITEMS
-    // ===============================================
-
     const items = [];
 
+
+    // =================================================
+    // COLLECT ITEMS
+    // =================================================
 
     document
         .querySelectorAll(".item-row")
@@ -771,8 +914,8 @@ async function saveBill() {
             const itemName =
                 row
                     .querySelector(".item-name")
-                    .value
-                    .trim();
+                    ?.value
+                    .trim() || "";
 
 
             if (!itemName) {
@@ -783,11 +926,13 @@ async function saveBill() {
 
 
             const metal =
-                row.querySelector(".metal").value;
+                row.querySelector(".metal")
+                    ?.value || "";
 
 
             const purityValue =
-                row.querySelector(".purity").value;
+                row.querySelector(".purity")
+                    ?.value || "";
 
 
             let savedPurity =
@@ -813,27 +958,37 @@ async function saveBill() {
 
                 gross_weight:
                     parseFloat(
-                        row.querySelector(".gross-weight").value
+                        row.querySelector(
+                            ".gross-weight"
+                        )?.value
                     ) || 0,
 
                 net_weight:
                     parseFloat(
-                        row.querySelector(".net-weight").value
+                        row.querySelector(
+                            ".net-weight"
+                        )?.value
                     ) || 0,
 
                 rate:
                     parseFloat(
-                        row.querySelector(".rate").value
+                        row.querySelector(
+                            ".rate"
+                        )?.value
                     ) || 0,
 
                 making:
                     parseFloat(
-                        row.querySelector(".making").value
+                        row.querySelector(
+                            ".making"
+                        )?.value
                     ) || 0,
 
                 amount:
                     parseFloat(
-                        row.querySelector(".amount").value
+                        row.querySelector(
+                            ".amount"
+                        )?.value
                     ) || 0
 
             });
@@ -852,41 +1007,144 @@ async function saveBill() {
     }
 
 
-    // ===============================================
+    // =================================================
+    // CHECK REQUIRED METAL RATES
+    // =================================================
+
+    let hasGold = false;
+
+    let hasSilver = false;
+
+
+    document
+        .querySelectorAll(".item-row")
+        .forEach(function (row) {
+
+            const itemName =
+                row.querySelector(
+                    ".item-name"
+                )?.value.trim();
+
+
+            if (!itemName) {
+                return;
+            }
+
+
+            const metal =
+                row.querySelector(
+                    ".metal"
+                )?.value;
+
+
+            if (metal === "Gold") {
+
+                hasGold = true;
+
+            }
+
+
+            if (metal === "Silver") {
+
+                hasSilver = true;
+
+            }
+
+        });
+
+
+    const goldRate =
+        parseFloat(
+            document.getElementById(
+                "gold_24k_rate"
+            )?.value
+        ) || 0;
+
+
+    const silverRate =
+        parseFloat(
+            document.getElementById(
+                "silver_1kg_rate"
+            )?.value
+        ) || 0;
+
+
+    if (
+        hasGold &&
+        goldRate <= 0
+    ) {
+
+        alert(
+            "Gold item ke liye 24K Gold ka 10 gram rate enter kariye."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        hasSilver &&
+        silverRate <= 0
+    ) {
+
+        alert(
+            "Silver item ke liye Silver ka 1 KG rate enter kariye."
+        );
+
+        return;
+
+    }
+
+
+    // =================================================
     // TOTALS
-    // ===============================================
+    // =================================================
 
     const subtotal =
         parseFloat(
-            document.getElementById("subtotal").value
+            document.getElementById(
+                "subtotal"
+            )?.value
         ) || 0;
 
 
     const discount =
         parseFloat(
-            document.getElementById("discount").value
+            document.getElementById(
+                "discount"
+            )?.value
         ) || 0;
 
 
     const gst =
         parseFloat(
-            document.getElementById("gst").value
+            document.getElementById(
+                "gst"
+            )?.value
         ) || 0;
 
 
     const grandTotal =
         parseFloat(
-            document.getElementById("grand_total").value
+            document.getElementById(
+                "grand_total"
+            )?.value
         ) || 0;
 
 
     const amountPaid =
         parseFloat(
-            document.getElementById("amount_paid").value
+            document.getElementById(
+                "amount_paid"
+            )?.value
         ) || 0;
 
 
-    if (amountPaid > grandTotal) {
+    if (
+        amountPaid >
+        grandTotal
+    ) {
 
         alert(
             "Amount Paid Grand Total se jyada nahi ho sakta."
@@ -898,12 +1156,14 @@ async function saveBill() {
 
 
     const paymentMode =
-        document.getElementById("payment_mode").value;
+        document.getElementById(
+            "payment_mode"
+        )?.value || "Cash";
 
 
-    // ===============================================
-    // JSON
-    // ===============================================
+    // =================================================
+    // DATA
+    // =================================================
 
     const billData = {
 
@@ -940,9 +1200,9 @@ async function saveBill() {
     };
 
 
-    // ===============================================
-    // SEND
-    // ===============================================
+    // =================================================
+    // SEND TO SERVER
+    // =================================================
 
     try {
 
@@ -950,17 +1210,22 @@ async function saveBill() {
             await fetch(
                 "/save_bill",
                 {
-                    method: "POST",
+
+                    method:
+                        "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body:
                         JSON.stringify(
                             billData
                         )
+
                 }
             );
 

@@ -1,411 +1,767 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>New Bill - Shree Ram Kumar Jewellers</title>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        New Bill - Shree Ram Kumar Jewellers
+    </title>
+
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
+
         body {
+
             margin: 0;
+
             font-family: Arial, sans-serif;
+
             background: #eee8dd;
+
             color: #321d12;
         }
 
+
         .page {
+
             max-width: 1250px;
+
             margin: 20px auto;
+
             background: #fffdf8;
+
             border: 1px solid #d2ae55;
+
             border-radius: 15px;
+
             overflow: hidden;
-            box-shadow: 0 10px 35px rgba(0,0,0,.15);
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,.15);
         }
+
 
         .header {
+
             padding: 15px 25px;
+
             color: white;
-            background: linear-gradient(
-                135deg,
-                #4b050b,
-                #781019,
-                #971d27,
-                #600810
-            );
-            border-bottom: 4px solid #d6b050;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4b050b,
+                    #781019,
+                    #971d27,
+                    #600810
+                );
+
+            border-bottom:
+                4px solid #d6b050;
         }
 
+
         .jai {
+
             text-align: center;
+
             color: #f0cf73;
+
             font-weight: bold;
+
             margin-bottom: 8px;
         }
 
+
         .header-main {
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             gap: 20px;
         }
 
+
         .brand {
+
             display: flex;
+
             align-items: center;
+
             gap: 18px;
         }
 
+
         .logo {
+
             width: 105px;
+
             height: 95px;
+
             object-fit: contain;
         }
 
+
         .shop-name {
+
             margin: 0;
+
             font-size: 31px;
+
             color: #fff4d2;
         }
 
+
         .est {
+
             margin-top: 4px;
+
             color: #edce72;
+
             font-size: 11px;
+
             font-weight: bold;
         }
 
+
         .shop-info {
+
             margin-top: 7px;
+
             color: #f8e8bf;
+
             font-size: 11px;
+
             line-height: 1.6;
         }
 
+
         .back-btn {
+
             text-decoration: none;
+
             background: #fff0cd;
+
             color: #761018;
+
             padding: 10px 15px;
+
             border-radius: 7px;
+
             font-weight: bold;
         }
 
+
         .content {
+
             padding: 24px;
         }
 
+
         .title {
+
             color: #781019;
+
             margin: 0 0 18px;
+
             font-family: Georgia, serif;
         }
 
+
         .customer-grid {
+
             display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+
+            grid-template-columns:
+                1.5fr 1fr 1fr 1fr;
+
             gap: 12px;
+
             margin-bottom: 18px;
         }
 
+
         label {
+
             display: block;
+
             font-size: 11px;
+
             color: #6b5137;
+
             font-weight: bold;
+
             margin-bottom: 5px;
         }
 
+
         input,
         select {
+
             width: 100%;
+
             padding: 10px;
-            border: 1px solid #ceb274;
+
+            border:
+                1px solid #ceb274;
+
             border-radius: 6px;
+
             outline: none;
+
             background: #fffefa;
         }
 
+
         input:focus,
         select:focus {
+
             border-color: #7b101a;
         }
 
-        .gold-rate-box {
+
+        /* =========================================
+           TODAY METAL RATE BOX
+        ========================================= */
+
+        .metal-rate-box {
+
             margin-bottom: 22px;
-            padding: 16px 18px;
-            border: 2px solid #d0aa4c;
+
+            padding: 18px;
+
+            border:
+                2px solid #d0aa4c;
+
             border-radius: 10px;
-            background: linear-gradient(135deg, #fff8df, #fffdf7);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff8df,
+                    #fffdf7
+                );
         }
 
-        .gold-rate-box h3 {
-            margin: 0 0 12px;
+
+        .metal-rate-box h3 {
+
+            margin:
+                0 0 15px;
+
             color: #781019;
-            font-family: Georgia, serif;
+
+            font-family:
+                Georgia, serif;
         }
 
-        .gold-rate-grid {
+
+        .market-rate-section {
+
             display: grid;
-            grid-template-columns: 260px 1fr;
+
+            grid-template-columns:
+                260px 1fr;
+
             gap: 20px;
+
             align-items: end;
         }
 
-        .gold-rate-input {
-            font-size: 18px;
-            font-weight: bold;
-            color: #781019;
-            background: #fff5d7;
-            border: 2px solid #c59b37;
+
+        .market-rate-section +
+        .market-rate-section {
+
+            margin-top: 18px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid #dec680;
         }
 
+
+        .market-rate-input {
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            color: #781019;
+
+            background: #fff5d7;
+
+            border:
+                2px solid #c59b37;
+        }
+
+
         .rate-preview {
+
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
             gap: 8px;
         }
 
+
+        .silver-preview {
+
+            grid-template-columns:
+                repeat(3, 1fr);
+        }
+
+
         .rate-card {
+
             padding: 9px;
-            border: 1px solid #dec680;
+
+            border:
+                1px solid #dec680;
+
             border-radius: 7px;
+
             background: white;
+
             text-align: center;
         }
 
+
         .rate-card strong {
+
             display: block;
+
             color: #781019;
+
             font-size: 12px;
         }
 
+
         .rate-card span {
+
             display: block;
+
             margin-top: 4px;
+
             font-size: 12px;
+
             font-weight: bold;
+
             color: #5c4228;
         }
 
+
+        /* =========================================
+           ITEM TABLE
+        ========================================= */
+
         .table-wrap {
+
             overflow-x: auto;
         }
 
+
         table {
+
             width: 100%;
-            border-collapse: collapse;
+
+            border-collapse:
+                collapse;
+
             min-width: 1050px;
         }
 
+
         th {
+
             background: #781019;
+
             color: #fff4d2;
+
             padding: 10px 6px;
+
             font-size: 11px;
-            border: 1px solid #a56155;
+
+            border:
+                1px solid #a56155;
         }
 
+
         td {
+
             padding: 6px;
-            border: 1px solid #dfcfaa;
+
+            border:
+                1px solid #dfcfaa;
         }
+
 
         td input,
         td select {
+
             padding: 8px 6px;
+
             font-size: 12px;
         }
 
-        .rate.gold-auto-rate {
+
+        .auto-rate {
+
             background: #fff1cb;
+
             font-weight: bold;
+
             color: #781019;
         }
+
 
         .amount {
+
             background: #f8eed7;
+
             font-weight: bold;
         }
+
 
         .remove-btn {
+
             border: none;
+
             background: #941d28;
+
             color: white;
+
             border-radius: 5px;
+
             cursor: pointer;
+
             padding: 8px 11px;
+
             font-weight: bold;
         }
+
 
         .add-btn {
+
             margin-top: 10px;
+
             border: none;
+
             background: #7b101a;
+
             color: white;
+
             padding: 10px 16px;
+
             border-radius: 6px;
+
             cursor: pointer;
+
             font-weight: bold;
         }
 
-        .bottom-grid {
-            margin-top: 25px;
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            gap: 30px;
-        }
 
-        .box {
-            border: 1px solid #d6bb7b;
-            background: #fffaf0;
-            padding: 18px;
-            border-radius: 10px;
-        }
-
-        .box h3 {
-            margin: 0 0 15px;
-            color: #781019;
-            font-family: Georgia, serif;
-        }
-
-        .payment-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .summary-row {
-            display: grid;
-            grid-template-columns: 1fr 150px;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .summary-row span {
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .grand {
-            padding-top: 10px;
-            margin-top: 10px;
-            border-top: 2px solid #7b101a;
-        }
-
-        .grand span {
-            color: #781019;
-            font-size: 16px;
-        }
-
-        .grand input {
-            font-size: 17px;
-            font-weight: bold;
-            color: #781019;
-            background: #fff1cb;
-        }
-
-        .save-btn {
-            width: 100%;
-            border: none;
-            margin-top: 20px;
-            padding: 14px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #651019, #971d28);
-            color: #fff3d1;
-        }
+        /* =========================================
+           FORMULA NOTE
+        ========================================= */
 
         .formula-note {
+
             margin-top: 15px;
+
             background: #fff4db;
-            border-left: 4px solid #b89034;
-            padding: 10px 12px;
+
+            border-left:
+                4px solid #b89034;
+
+            padding: 12px;
+
             font-size: 11px;
-            line-height: 1.7;
+
+            line-height: 1.8;
+
             color: #674c31;
         }
 
-        .footer {
+
+        /* =========================================
+           PAYMENT + SUMMARY
+        ========================================= */
+
+        .bottom-grid {
+
             margin-top: 25px;
-            padding-top: 14px;
-            border-top: 1px solid #d9c28b;
-            text-align: center;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 420px;
+
+            gap: 30px;
+        }
+
+
+        .box {
+
+            border:
+                1px solid #d6bb7b;
+
+            background: #fffaf0;
+
+            padding: 18px;
+
+            border-radius: 10px;
+        }
+
+
+        .box h3 {
+
+            margin: 0 0 15px;
+
             color: #781019;
+
+            font-family:
+                Georgia, serif;
+        }
+
+
+        .payment-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 12px;
+        }
+
+
+        .summary-row {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 150px;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .summary-row span {
+
+            font-size: 12px;
+
             font-weight: bold;
+        }
+
+
+        .grand {
+
+            padding-top: 10px;
+
+            margin-top: 10px;
+
+            border-top:
+                2px solid #7b101a;
+        }
+
+
+        .grand span {
+
+            color: #781019;
+
+            font-size: 16px;
+        }
+
+
+        .grand input {
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            color: #781019;
+
+            background: #fff1cb;
+        }
+
+
+        .save-btn {
+
+            width: 100%;
+
+            border: none;
+
+            margin-top: 20px;
+
+            padding: 14px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #651019,
+                    #971d28
+                );
+
+            color: #fff3d1;
+        }
+
+
+        .footer {
+
+            margin-top: 25px;
+
+            padding-top: 14px;
+
+            border-top:
+                1px solid #d9c28b;
+
+            text-align: center;
+
+            color: #781019;
+
+            font-weight: bold;
+
             font-size: 13px;
         }
 
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
         @media(max-width: 900px) {
+
             .customer-grid {
-                grid-template-columns: 1fr 1fr;
+
+                grid-template-columns:
+                    1fr 1fr;
             }
+
 
             .bottom-grid {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    1fr;
             }
 
-            .gold-rate-grid {
-                grid-template-columns: 1fr;
+
+            .market-rate-section {
+
+                grid-template-columns:
+                    1fr;
             }
 
-            .rate-preview {
-                grid-template-columns: repeat(3, 1fr);
-            }
         }
 
+
         @media(max-width: 600px) {
+
             .page {
+
                 margin: 0;
+
                 border-radius: 0;
             }
 
+
             .header-main {
-                flex-direction: column;
+
+                flex-direction:
+                    column;
+
                 text-align: center;
             }
 
+
             .brand {
-                flex-direction: column;
+
+                flex-direction:
+                    column;
             }
+
 
             .customer-grid,
             .payment-grid {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    1fr;
             }
 
-            .rate-preview {
-                grid-template-columns: 1fr 1fr;
+
+            .rate-preview,
+            .silver-preview {
+
+                grid-template-columns:
+                    1fr 1fr;
             }
+
 
             .content {
+
                 padding: 15px;
             }
+
         }
+
     </style>
+
 </head>
+
+
 
 <body>
 
+
 <div class="page">
+
+
+    <!-- =========================================
+         HEADER
+    ========================================== -->
 
     <div class="header">
 
+
         <div class="jai">
+
             || जय श्री राम ||
+
         </div>
+
 
         <div class="header-main">
 
+
             <div class="brand">
+
 
                 <img
                     class="logo"
@@ -413,62 +769,104 @@
                     alt="Shop Logo"
                 >
 
+
                 <div>
 
+
                     <h1 class="shop-name">
+
                         श्री राम कुमार ज्वैलर्स
+
                     </h1>
 
+
                     <div class="est">
+
                         ESTABLISHED 1992
+
                     </div>
 
+
                     <div class="shop-info">
-                        Proprietors: Rajesh Kumar Soni | Umesh Kumar Soni
+
+                        Proprietors:
+                        Rajesh Kumar Soni |
+                        Umesh Kumar Soni
+
                         <br>
-                        Harraipur Alamchand, Kaushambi
+
+                        Harraipur Alamchand,
+                        Kaushambi
+
                     </div>
+
 
                 </div>
 
+
             </div>
+
 
             <a
                 href="{{ url_for('dashboard') }}"
                 class="back-btn"
             >
+
                 ← Dashboard
+
             </a>
 
+
         </div>
+
 
     </div>
 
 
+
+    <!-- =========================================
+         CONTENT
+    ========================================== -->
+
     <div class="content">
 
+
         <h2 class="title">
+
             Create New Bill
+
         </h2>
 
 
-        <!-- CUSTOMER DETAILS -->
+
+        <!-- =====================================
+             CUSTOMER
+        ====================================== -->
 
         <div class="customer-grid">
 
+
             <div>
-                <label>Customer Name *</label>
+
+                <label>
+                    Customer Name *
+                </label>
 
                 <input
                     type="text"
                     id="customer_name"
                     placeholder="Customer Name"
                 >
+
             </div>
 
 
+
             <div>
-                <label>Mobile Number</label>
+
+                <label>
+                    Mobile Number
+                </label>
 
                 <input
                     type="text"
@@ -476,11 +874,16 @@
                     placeholder="Mobile Number"
                     maxlength="10"
                 >
+
             </div>
 
 
+
             <div>
-                <label>Bill Number</label>
+
+                <label>
+                    Bill Number
+                </label>
 
                 <input
                     type="text"
@@ -488,215 +891,469 @@
                     value="{{ bill_no }}"
                     readonly
                 >
+
             </div>
 
 
+
             <div>
-                <label>Date</label>
+
+                <label>
+                    Date
+                </label>
 
                 <input
                     type="date"
                     id="bill_date"
                 >
+
             </div>
+
 
         </div>
 
 
-        <!-- 24K GOLD RATE -->
 
-        <div class="gold-rate-box">
+        <!-- =====================================
+             GOLD + SILVER MARKET RATES
+        ====================================== -->
 
-            <h3>Today's Gold Rate</h3>
+        <div class="metal-rate-box">
 
-            <div class="gold-rate-grid">
+
+            <h3>
+                Today's Metal Rates
+            </h3>
+
+
+
+            <!-- GOLD -->
+
+            <div class="market-rate-section">
+
 
                 <div>
-                   <label>24K Gold Rate ₹ / 10 Gram *</label>
+
+
+                    <label>
+
+                        24K Gold Rate ₹ / 10 Gram *
+
+                    </label>
+
 
                     <input
                         type="number"
                         id="gold_24k_rate"
-                        class="gold-rate-input"
-                        placeholder="Enter 24K rate"
+                        class="market-rate-input"
+                        placeholder="Example: 150000"
                         min="0"
                         step="0.01"
-                        oninput="updateAllGoldRates()"
+                        oninput="updateAllMetalRates()"
                     >
+
+
                 </div>
+
+
 
                 <div class="rate-preview">
 
-                    <div class="rate-card">
-                        <strong>24K</strong>
-                        <span id="preview_24k">₹0.00</span>
-                    </div>
 
                     <div class="rate-card">
-                        <strong>22K</strong>
-                        <span id="preview_22k">₹0.00</span>
+
+                        <strong>
+                            24K
+                        </strong>
+
+                        <span id="preview_24k">
+                            ₹0.00/g
+                        </span>
+
                     </div>
 
-                    <div class="rate-card">
-                        <strong>21K</strong>
-                        <span id="preview_21k">₹0.00</span>
-                    </div>
+
 
                     <div class="rate-card">
-                        <strong>20K</strong>
-                        <span id="preview_20k">₹0.00</span>
+
+                        <strong>
+                            22K
+                        </strong>
+
+                        <span id="preview_22k">
+                            ₹0.00/g
+                        </span>
+
                     </div>
 
+
+
                     <div class="rate-card">
-                        <strong>18K</strong>
-                        <span id="preview_18k">₹0.00</span>
+
+                        <strong>
+                            21K
+                        </strong>
+
+                        <span id="preview_21k">
+                            ₹0.00/g
+                        </span>
+
                     </div>
+
+
+
+                    <div class="rate-card">
+
+                        <strong>
+                            20K
+                        </strong>
+
+                        <span id="preview_20k">
+                            ₹0.00/g
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="rate-card">
+
+                        <strong>
+                            18K
+                        </strong>
+
+                        <span id="preview_18k">
+                            ₹0.00/g
+                        </span>
+
+                    </div>
+
 
                 </div>
 
+
             </div>
+
+
+
+            <!-- SILVER -->
+
+            <div class="market-rate-section">
+
+
+                <div>
+
+
+                    <label>
+
+                        Silver Rate ₹ / 1 KG *
+
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="silver_1kg_rate"
+                        class="market-rate-input"
+                        placeholder="Example: 180000"
+                        min="0"
+                        step="0.01"
+                        oninput="updateAllMetalRates()"
+                    >
+
+
+                </div>
+
+
+
+                <div class="rate-preview silver-preview">
+
+
+                    <div class="rate-card">
+
+                        <strong>
+                            Silver 100%
+                        </strong>
+
+                        <span id="preview_silver_100">
+                            ₹0.00/g
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="rate-card">
+
+                        <strong>
+                            Silver 95%
+                        </strong>
+
+                        <span id="preview_silver_95">
+                            ₹0.00/g
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="rate-card">
+
+                        <strong>
+                            Silver 90%
+                        </strong>
+
+                        <span id="preview_silver_90">
+                            ₹0.00/g
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
 
         </div>
 
 
-        <!-- JEWELLERY TABLE -->
+
+        <!-- =====================================
+             JEWELLERY TABLE
+        ====================================== -->
 
         <div class="table-wrap">
 
+
             <table>
 
+
                 <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Metal</th>
-                    <th>Purity</th>
-                    <th>Gross Wt.</th>
-                    <th>Net Wt.</th>
-                    <th>Rate ₹/g</th>
-                    <th>Making ₹/g</th>
-                    <th>Amount ₹</th>
-                    <th>Remove</th>
-                </tr>
+
+                    <tr>
+
+                        <th>
+                            Item
+                        </th>
+
+                        <th>
+                            Metal
+                        </th>
+
+                        <th>
+                            Purity
+                        </th>
+
+                        <th>
+                            Gross Wt.
+                        </th>
+
+                        <th>
+                            Net Wt.
+                        </th>
+
+                        <th>
+                            Rate ₹/g
+                        </th>
+
+                        <th>
+                            Making ₹/g
+                        </th>
+
+                        <th>
+                            Amount ₹
+                        </th>
+
+                        <th>
+                            Remove
+                        </th>
+
+                    </tr>
+
                 </thead>
+
+
 
                 <tbody id="itemsBody">
 
-                <tr class="item-row">
 
-                    <td>
-                        <input
-                            type="text"
-                            class="item-name"
-                            placeholder="Ring / Chain"
-                        >
-                    </td>
+                    <tr class="item-row">
 
 
-                    <td>
+                        <td>
 
-                        <select
-                            class="metal"
-                            onchange="metalChanged(this)"
-                        >
-                            <option value="Gold">Gold</option>
-                            <option value="Silver">Silver</option>
-                        </select>
+                            <input
+                                type="text"
+                                class="item-name"
+                                placeholder="Ring / Chain"
+                            >
 
-                    </td>
+                        </td>
 
 
-                    <td>
 
-                        <select
-                            class="purity"
-                            onchange="calculateRow(this.closest('tr'))"
-                        >
+                        <td>
 
-                            <option value="24K">Gold 24K</option>
-                            <option value="22K" selected>Gold 22K</option>
-                            <option value="21K">Gold 21K</option>
-                            <option value="20K">Gold 20K</option>
-                            <option value="18K">Gold 18K</option>
+                            <select
+                                class="metal"
+                                onchange="metalChanged(this)"
+                            >
 
-                        </select>
+                                <option
+                                    value="Gold"
+                                    selected
+                                >
+                                    Gold
+                                </option>
 
-                    </td>
+                                <option
+                                    value="Silver"
+                                >
+                                    Silver
+                                </option>
 
+                            </select>
 
-                    <td>
-                        <input
-                            type="number"
-                            class="gross-weight"
-                            placeholder="Optional"
-                            step="0.001"
-                            min="0"
-                        >
-                    </td>
+                        </td>
 
 
-                    <td>
-                        <input
-                            type="number"
-                            class="net-weight"
-                            placeholder="0.000"
-                            step="0.001"
-                            min="0"
-                            oninput="calculateRow(this.closest('tr'))"
-                        >
-                    </td>
+
+                        <td>
+
+                            <select
+                                class="purity"
+                                onchange="calculateRow(this.closest('tr'))"
+                            >
+
+                                <option value="24K">
+                                    Gold 24K
+                                </option>
+
+                                <option
+                                    value="22K"
+                                    selected
+                                >
+                                    Gold 22K
+                                </option>
+
+                                <option value="21K">
+                                    Gold 21K
+                                </option>
+
+                                <option value="20K">
+                                    Gold 20K
+                                </option>
+
+                                <option value="18K">
+                                    Gold 18K
+                                </option>
+
+                            </select>
+
+                        </td>
 
 
-                    <td>
-                        <input
-                            type="number"
-                            class="rate gold-auto-rate"
-                            placeholder="Auto Rate"
-                            step="0.01"
-                            min="0"
-                            readonly
-                        >
-                    </td>
+
+                        <td>
+
+                            <input
+                                type="number"
+                                class="gross-weight"
+                                placeholder="Optional"
+                                step="0.001"
+                                min="0"
+                            >
+
+                        </td>
 
 
-                    <td>
-                        <input
-                            type="number"
-                            class="making"
-                            placeholder="₹ / gram"
-                            step="0.01"
-                            min="0"
-                            oninput="calculateRow(this.closest('tr'))"
-                        >
-                    </td>
+
+                        <td>
+
+                            <input
+                                type="number"
+                                class="net-weight"
+                                placeholder="0.000"
+                                step="0.001"
+                                min="0"
+                                oninput="calculateRow(this.closest('tr'))"
+                            >
+
+                        </td>
 
 
-                    <td>
-                        <input
-                            type="number"
-                            class="amount"
-                            value="0.00"
-                            readonly
-                        >
-                    </td>
+
+                        <td>
+
+                            <input
+                                type="number"
+                                class="rate auto-rate"
+                                placeholder="Auto Rate"
+                                step="0.01"
+                                min="0"
+                                readonly
+                            >
+
+                        </td>
 
 
-                    <td>
-                        <button
-                            type="button"
-                            class="remove-btn"
-                            onclick="removeRow(this)"
-                        >
-                            ✕
-                        </button>
-                    </td>
 
-                </tr>
+                        <td>
+
+                            <input
+                                type="number"
+                                class="making"
+                                placeholder="₹ / gram"
+                                step="0.01"
+                                min="0"
+                                oninput="calculateRow(this.closest('tr'))"
+                            >
+
+                        </td>
+
+
+
+                        <td>
+
+                            <input
+                                type="number"
+                                class="amount"
+                                value="0.00"
+                                readonly
+                            >
+
+                        </td>
+
+
+
+                        <td>
+
+                            <button
+                                type="button"
+                                class="remove-btn"
+                                onclick="removeRow(this)"
+                            >
+
+                                ✕
+
+                            </button>
+
+                        </td>
+
+
+                    </tr>
+
 
                 </tbody>
 
+
             </table>
 
+
         </div>
+
 
 
         <button
@@ -704,71 +1361,125 @@
             class="add-btn"
             onclick="addRow()"
         >
+
             + Add Jewellery Item
+
         </button>
 
 
+
+        <!-- =====================================
+             FORMULA INFO
+        ====================================== -->
+
         <div class="formula-note">
 
-            <strong>Gold Calculation:</strong>
 
-            24K rate manually enter karo.
-            Software automatically purity rate calculate karega:
+            <strong>
+                Gold Calculation:
+            </strong>
 
-            <br>
+            24K ka 10 gram market rate enter karein.
 
-            24K = 24K Rate × 24/24,
-            22K = 24K Rate × 22/24,
-            21K = 24K Rate × 21/24,
-            20K = 24K Rate × 20/24,
-            18K = 24K Rate × 18/24.
+            Software automatically 1 gram rate nikal kar
+
+            24K, 22K, 21K, 20K aur 18K ke according
+            jewellery amount calculate karega.
+
 
             <br><br>
 
-            <strong>Silver Calculation:</strong>
 
-            100% = Weight × Rate,
-            95% = Weight × Rate × 0.95,
-            90% = Weight × Rate × 0.90.
+            <strong>
+                Silver Calculation:
+            </strong>
 
-            <br>
+            Silver ka 1 KG (1000 gram)
+            market rate enter karein.
 
-            <strong>Making:</strong>
+            Software automatically per gram rate
+            calculate karke
 
-            Net Weight × Making Rate per gram.
+            100%, 95% ya 90%
+            purity ke according amount nikalega.
+
+
+            <br><br>
+
+
+            <strong>
+                Making Charge:
+            </strong>
+
+            Net Weight × Making Rate ₹ per gram.
+
 
         </div>
 
 
-        <!-- BOTTOM -->
+
+        <!-- =====================================
+             PAYMENT + SUMMARY
+        ====================================== -->
 
         <div class="bottom-grid">
+
 
 
             <!-- PAYMENT -->
 
             <div class="box">
 
-                <h3>Payment Details</h3>
+
+                <h3>
+                    Payment Details
+                </h3>
+
+
 
                 <div class="payment-grid">
 
+
                     <div>
-                        <label>Payment Mode</label>
+
+
+                        <label>
+                            Payment Mode
+                        </label>
+
 
                         <select id="payment_mode">
-                            <option value="Cash">Cash</option>
-                            <option value="UPI">UPI</option>
-                            <option value="Card">Card</option>
+
+                            <option value="Cash">
+                                Cash
+                            </option>
+
+                            <option value="UPI">
+                                UPI
+                            </option>
+
+                            <option value="Card">
+                                Card
+                            </option>
+
                             <option value="Bank Transfer">
                                 Bank Transfer
                             </option>
+
                         </select>
+
+
                     </div>
 
 
+
                     <div>
-                        <label>Amount Paid ₹</label>
+
+
+                        <label>
+                            Amount Paid ₹
+                        </label>
+
 
                         <input
                             type="number"
@@ -778,11 +1489,19 @@
                             step="0.01"
                             oninput="calculateBalance()"
                         >
+
+
                     </div>
 
 
+
                     <div>
-                        <label>Balance / Due ₹</label>
+
+
+                        <label>
+                            Balance / Due ₹
+                        </label>
+
 
                         <input
                             type="number"
@@ -790,23 +1509,36 @@
                             value="0.00"
                             readonly
                         >
+
+
                     </div>
+
 
                 </div>
 
+
             </div>
+
 
 
             <!-- BILL SUMMARY -->
 
             <div class="box">
 
-                <h3>Bill Summary</h3>
+
+                <h3>
+                    Bill Summary
+                </h3>
+
 
 
                 <div class="summary-row">
 
-                    <span>Subtotal</span>
+
+                    <span>
+                        Subtotal
+                    </span>
+
 
                     <input
                         type="number"
@@ -815,12 +1547,18 @@
                         readonly
                     >
 
+
                 </div>
+
 
 
                 <div class="summary-row">
 
-                    <span>Discount ₹</span>
+
+                    <span>
+                        Discount ₹
+                    </span>
+
 
                     <input
                         type="number"
@@ -831,30 +1569,57 @@
                         oninput="calculateBillTotal()"
                     >
 
+
                 </div>
+
 
 
                 <div class="summary-row">
 
-                    <span>GST Rate</span>
+
+                    <span>
+                        GST Rate
+                    </span>
+
 
                     <select
                         id="gst_percent"
                         onchange="calculateBillTotal()"
                     >
 
-                        <option value="0">0%</option>
-                        <option value="2">2%</option>
-                        <option value="3" selected>3%</option>
+
+                        <option value="0">
+                            0%
+                        </option>
+
+
+                        <option value="2">
+                            2%
+                        </option>
+
+
+                        <option
+                            value="3"
+                            selected
+                        >
+                            3%
+                        </option>
+
 
                     </select>
+
 
                 </div>
 
 
+
                 <div class="summary-row">
 
-                    <span>GST Amount ₹</span>
+
+                    <span>
+                        GST Amount ₹
+                    </span>
+
 
                     <input
                         type="number"
@@ -863,12 +1628,18 @@
                         readonly
                     >
 
+
                 </div>
+
 
 
                 <div class="summary-row grand">
 
-                    <span>Grand Total</span>
+
+                    <span>
+                        Grand Total
+                    </span>
+
 
                     <input
                         type="number"
@@ -877,7 +1648,9 @@
                         readonly
                     >
 
+
                 </div>
+
 
 
                 <button
@@ -885,24 +1658,38 @@
                     class="save-btn"
                     onclick="saveBill()"
                 >
+
                     SAVE BILL
+
                 </button>
+
 
             </div>
 
+
         </div>
+
 
 
         <div class="footer">
+
             !! शुद्धता हमारी पहचान, विश्वास आपका !!
+
         </div>
 
+
     </div>
+
 
 </div>
 
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
 
 </body>
+
 </html>

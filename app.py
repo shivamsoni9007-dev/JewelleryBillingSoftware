@@ -284,7 +284,120 @@ def login():
         "login.html",
         error=error
     )
+# =========================================================
+# FORGOT PASSWORD
+# =========================================================
 
+@app.route(
+    "/forgot-password",
+    methods=["GET", "POST"]
+)
+def forgot_password():
+
+    error = None
+    message = None
+
+    if request.method == "POST":
+
+        username = request.form.get(
+            "username",
+            ""
+        ).strip()
+
+        recovery_code = request.form.get(
+            "recovery_code",
+            ""
+        )
+
+        new_password = request.form.get(
+            "new_password",
+            ""
+        )
+
+        confirm_password = request.form.get(
+            "confirm_password",
+            ""
+        )
+
+        if len(new_password) < 8:
+
+            error = (
+                "New Password kam se kam 8 characters ka hona chahiye."
+            )
+
+        elif new_password != confirm_password:
+
+            error = (
+                "New Password aur Confirm Password match nahi kar rahe."
+            )
+
+        else:
+
+            conn = get_db_connection()
+
+            admin = conn.execute("""
+                SELECT *
+
+                FROM admin_users
+
+                WHERE username = ?
+            """, (
+                username,
+            )).fetchone()
+
+            if not admin:
+
+                conn.close()
+
+                error = (
+                    "Username ya Recovery Code galat hai."
+                )
+
+            elif (
+                not admin["recovery_code_hash"]
+                or not check_password_hash(
+                    admin["recovery_code_hash"],
+                    recovery_code
+                )
+            ):
+
+                conn.close()
+
+                error = (
+                    "Username ya Recovery Code galat hai."
+                )
+
+            else:
+
+                new_hash = generate_password_hash(
+                    new_password
+                )
+
+                conn.execute("""
+                    UPDATE admin_users
+
+                    SET
+                        password_hash = ?,
+                        updated_at = CURRENT_TIMESTAMP
+
+                    WHERE id = ?
+                """, (
+                    new_hash,
+                    admin["id"]
+                ))
+
+                conn.commit()
+                conn.close()
+
+                message = (
+                    "Password successfully reset ho gaya."
+                )
+
+    return render_template(
+        "forgot_password.html",
+        error=error,
+        message=message
+    )
 
 # =========================================================
 # LOGOUT

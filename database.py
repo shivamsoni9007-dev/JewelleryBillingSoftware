@@ -78,7 +78,6 @@ class PostgresConnection:
             query.strip().lower().split()
         )
 
-        # Bills insert ke baad ID chahiye
         if (
             normalized.startswith("insert into bills")
             and "returning id" not in normalized
@@ -141,7 +140,6 @@ class PostgresConnection:
 
 def get_db_connection():
 
-    # Render PostgreSQL
     if DATABASE_URL:
 
         import psycopg
@@ -153,7 +151,6 @@ def get_db_connection():
         return PostgresConnection(conn)
 
 
-    # Local SQLite
     conn = sqlite3.connect(
         SQLITE_DATABASE
     )
@@ -189,10 +186,10 @@ DEFAULT_SETTINGS = {
         "Harraipur Alamchand, Kaushambi",
 
     "mobile_1":
-        "",
+        "9935850807",
 
     "mobile_2":
-        "",
+        "9935256605",
 
     "default_gst":
         "3",
@@ -517,7 +514,6 @@ def init_db():
 
     # =====================================================
     # ADMIN USERS
-    # Password database me HASH form me rahega
     # =====================================================
 
     conn.execute("""
@@ -529,6 +525,8 @@ def init_db():
             username TEXT UNIQUE NOT NULL,
 
             password_hash TEXT NOT NULL,
+
+            recovery_code_hash TEXT,
 
             updated_at
                 TIMESTAMP
@@ -543,6 +541,8 @@ def init_db():
 
             password_hash TEXT NOT NULL,
 
+            recovery_code_hash TEXT,
+
             updated_at
                 TIMESTAMP
                 DEFAULT CURRENT_TIMESTAMP
@@ -551,8 +551,38 @@ def init_db():
 
 
     # =====================================================
-    # INSERT DEFAULT SHOP SETTINGS
-    # Sirf missing settings create hongi
+    # EXISTING DATABASE MIGRATION
+    # Recovery column old DB me add karo
+    # =====================================================
+
+    if DATABASE_URL:
+
+        conn.execute("""
+            ALTER TABLE admin_users
+            ADD COLUMN IF NOT EXISTS recovery_code_hash TEXT
+        """)
+
+    else:
+
+        columns = conn.execute("""
+            PRAGMA table_info(admin_users)
+        """).fetchall()
+
+        column_names = [
+            row["name"]
+            for row in columns
+        ]
+
+        if "recovery_code_hash" not in column_names:
+
+            conn.execute("""
+                ALTER TABLE admin_users
+                ADD COLUMN recovery_code_hash TEXT
+            """)
+
+
+    # =====================================================
+    # INSERT DEFAULT SETTINGS
     # =====================================================
 
     for key, value in DEFAULT_SETTINGS.items():
@@ -583,12 +613,7 @@ def init_db():
 
 
     # =====================================================
-    # CREATE FIRST ADMIN USER
-    #
-    # Existing Render ADMIN_USERNAME / ADMIN_PASSWORD se
-    # first database account banega.
-    #
-    # Password plain text DB me save nahi hoga.
+    # CREATE FIRST ADMIN
     # =====================================================
 
     existing_admin = conn.execute("""
@@ -610,34 +635,52 @@ def init_db():
             "ADMIN_PASSWORD"
         )
 
-
         if (
             admin_username
             and admin_password
         ):
 
-            password_hash = (
-                generate_password_hash(
-                    admin_password
-                )
+            password_hash = generate_password_hash(
+                admin_password
             )
 
             conn.execute("""
                 INSERT INTO admin_users (
-
                     username,
-
                     password_hash
-
                 )
 
                 VALUES (?, ?)
             """, (
-
                 admin_username,
-
                 password_hash
             ))
+
+
+    # =====================================================
+    # SEED RECOVERY CODE
+    # =====================================================
+
+    admin_recovery_code = os.environ.get(
+        "ADMIN_RECOVERY_CODE"
+    )
+
+    if admin_recovery_code:
+
+        recovery_hash = generate_password_hash(
+            admin_recovery_code
+        )
+
+        conn.execute("""
+            UPDATE admin_users
+
+            SET recovery_code_hash = ?
+
+            WHERE recovery_code_hash IS NULL
+            OR recovery_code_hash = ''
+        """, (
+            recovery_hash,
+        ))
 
 
     conn.commit()

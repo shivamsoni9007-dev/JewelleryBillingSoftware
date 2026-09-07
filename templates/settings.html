@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Settings - Shree Ram Kumar Jewellers
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eee8dd;
+            color: #2d1b12;
+        }
+
+        .settings-app {
+            max-width: 1100px;
+            margin: 25px auto;
+            background: #fffdf8;
+            border: 1px solid #d6b562;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(0,0,0,0.15);
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #4d050b,
+                #7e101a,
+                #981d27,
+                #650912
+            );
+
+            color: white;
+            padding: 18px 24px;
+            border-bottom: 4px solid #d4ad4f;
+        }
+
+        .top-line {
+            text-align: center;
+            color: #f0cf72;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .header-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 90px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .shop-name {
+            margin: 0;
+            font-size: 28px;
+            color: #fff4d6;
+        }
+
+        .subtitle {
+            color: #efd387;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            background: #fff3d6;
+            color: #7b101a;
+            padding: 11px 17px;
+            border-radius: 7px;
+            font-weight: bold;
+            border: 1px solid #dfbd65;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 25px;
+        }
+
+        .page-title {
+            margin: 0 0 20px;
+            color: #75101a;
+            font-family: Georgia, serif;
+        }
+
+        .message {
+            background: #e9f8ee;
+            border: 1px solid #84c99a;
+            color: #176b36;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+
+        .error {
+            background: #fff0f0;
+            border: 1px solid #e29c9c;
+            color: #a01818;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+
+        .section {
+            border: 1px solid #d8bd80;
+            border-radius: 12px;
+            margin-bottom: 22px;
+            overflow: hidden;
+            background: #fffaf0;
+        }
+
+        .section-title {
+            margin: 0;
+            padding: 14px 18px;
+
+            background: linear-gradient(
+                90deg,
+                #7b101a,
+                #951d27
+            );
+
+            color: #fff5dc;
+            font-size: 18px;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #6e351e;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            min-height: 46px;
+            padding: 10px 12px;
+            border: 1px solid #cfb26e;
+            border-radius: 7px;
+            font-size: 15px;
+            background: white;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #8b1520;
+            box-shadow: 0 0 0 2px rgba(139,21,32,0.08);
+        }
+
+        .save-btn {
+            width: 100%;
+            min-height: 52px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(
+                135deg,
+                #75101a,
+                #9c222c
+            );
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            opacity: 0.92;
+        }
+
+        .password-btn {
+            background: linear-gradient(
+                135deg,
+                #9b6b14,
+                #d1a23e
+            );
+            color: #2d1606;
+        }
+
+        .help {
+            margin-top: 5px;
+            color: #866b50;
+            font-size: 11px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #d8bd80;
+            color: #7b101a;
+            font-weight: bold;
+        }
+
+        /* ================= TABLET ================= */
+
+        @media(max-width: 900px) {
+
+            .settings-app {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .content {
+                padding: 18px;
+            }
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media(max-width: 650px) {
+
+            .header-main {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .brand {
+                flex-direction: column;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            .back-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="settings-app">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="header">
+
+        <div class="top-line">
+            || जय श्री राम ||
+        </div>
+
+        <div class="header-main">
+
+            <div class="brand">
+
+                <img
+                    class="logo"
+                    src="{{ url_for('static', filename='images/shop-logo.png') }}"
+                    alt="Logo"
+                >
+
+                <div>
+
+                    <h1 class="shop-name">
+                        ⚙️ Software Settings
+                    </h1>
+
+                    <div class="subtitle">
+                        Shree Ram Kumar Jewellers
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="back-btn"
+            >
+                ← Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <div class="content">
+
+        <h2 class="page-title">
+            Shop & Software Settings
+        </h2>
+
+
+        {% if message %}
+
+            <div class="message">
+                ✅ {{ message }}
+            </div>
+
+        {% endif %}
+
+
+        {% if error %}
+
+            <div class="error">
+                ❌ {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        {% if request.args.get('password_changed') %}
+
+            <div class="message">
+                ✅ Password successfully changed.
+            </div>
+
+        {% endif %}
+
+
+        {% if request.args.get('current_password_wrong') %}
+
+            <div class="error">
+                ❌ Current Password galat hai.
+            </div>
+
+        {% endif %}
+
+
+        {% if request.args.get('password_mismatch') %}
+
+            <div class="error">
+                ❌ New Password aur Confirm Password match nahi kar rahe.
+            </div>
+
+        {% endif %}
+
+
+        {% if request.args.get('password_error') %}
+
+            <div class="error">
+                ❌ New Password kam se kam 8 characters ka hona chahiye.
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             SHOP SETTINGS
+        ================================================== -->
+
+        <form
+            method="POST"
+            action="{{ url_for('settings') }}"
+        >
+
+
+            <div class="section">
+
+                <h3 class="section-title">
+                    🏪 Shop Information
+                </h3>
+
+
+                <div class="section-body">
+
+                    <div class="form-grid">
+
+
+                        <div>
+
+                            <label>
+                                Shop Name - Hindi
+                            </label>
+
+                            <input
+                                type="text"
+                                name="shop_name_hindi"
+                                value="{{ settings.get('shop_name_hindi', '') }}"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Shop Name - English
+                            </label>
+
+                            <input
+                                type="text"
+                                name="shop_name_english"
+                                value="{{ settings.get('shop_name_english', '') }}"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Established Year
+                            </label>
+
+                            <input
+                                type="text"
+                                name="established"
+                                value="{{ settings.get('established', '') }}"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Address
+                            </label>
+
+                            <input
+                                type="text"
+                                name="address"
+                                value="{{ settings.get('address', '') }}"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Proprietor 1
+                            </label>
+
+                            <input
+                                type="text"
+                                name="proprietor_1"
+                                value="{{ settings.get('proprietor_1', '') }}"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Proprietor 2
+                            </label>
+
+                            <input
+                                type="text"
+                                name="proprietor_2"
+                                value="{{ settings.get('proprietor_2', '') }}"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Mobile Number 1
+                            </label>
+
+                            <input
+                                type="tel"
+                                name="mobile_1"
+                                inputmode="numeric"
+                                value="{{ settings.get('mobile_1', '') }}"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Mobile Number 2
+                            </label>
+
+                            <input
+                                type="tel"
+                                name="mobile_2"
+                                inputmode="numeric"
+                                value="{{ settings.get('mobile_2', '') }}"
+                            >
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 BILL SETTINGS
+            ============================================== -->
+
+            <div class="section">
+
+                <h3 class="section-title">
+                    🧾 Billing Settings
+                </h3>
+
+
+                <div class="section-body">
+
+                    <div class="form-grid">
+
+
+                        <div>
+
+                            <label>
+                                Default GST
+                            </label>
+
+                            <select name="default_gst">
+
+                                <option
+                                    value="3"
+                                    {% if settings.get('default_gst') == '3' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    3%
+                                </option>
+
+                                <option
+                                    value="2"
+                                    {% if settings.get('default_gst') == '2' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    2%
+                                </option>
+
+                                <option
+                                    value="0"
+                                    {% if settings.get('default_gst') == '0' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    0%
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Default Payment Mode
+                            </label>
+
+                            <select name="default_payment_mode">
+
+                                <option
+                                    value="Cash"
+                                    {% if settings.get('default_payment_mode') == 'Cash' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Cash
+                                </option>
+
+                                <option
+                                    value="UPI"
+                                    {% if settings.get('default_payment_mode') == 'UPI' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    UPI
+                                </option>
+
+                                <option
+                                    value="Card"
+                                    {% if settings.get('default_payment_mode') == 'Card' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Card
+                                </option>
+
+                                <option
+                                    value="Bank Transfer"
+                                    {% if settings.get('default_payment_mode') == 'Bank Transfer' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Bank Transfer
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="full">
+
+                            <label>
+                                Invoice Footer
+                            </label>
+
+                            <input
+                                type="text"
+                                name="invoice_footer"
+                                value="{{ settings.get('invoice_footer', '') }}"
+                            >
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 TERMS
+            ============================================== -->
+
+            <div class="section">
+
+                <h3 class="section-title">
+                    📜 Invoice Terms & Conditions
+                </h3>
+
+
+                <div class="section-body">
+
+                    <div class="form-grid">
+
+
+                        <div class="full">
+
+                            <label>Term 1</label>
+
+                            <textarea name="term_1">{{ settings.get('term_1', '') }}</textarea>
+
+                        </div>
+
+
+                        <div class="full">
+
+                            <label>Term 2</label>
+
+                            <textarea name="term_2">{{ settings.get('term_2', '') }}</textarea>
+
+                        </div>
+
+
+                        <div class="full">
+
+                            <label>Term 3</label>
+
+                            <textarea name="term_3">{{ settings.get('term_3', '') }}</textarea>
+
+                        </div>
+
+
+                        <div class="full">
+
+                            <label>Term 4</label>
+
+                            <textarea name="term_4">{{ settings.get('term_4', '') }}</textarea>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <br>
+
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+                        💾 Save Shop Settings
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </form>
+
+
+
+        <!-- =================================================
+             CHANGE PASSWORD
+        ================================================== -->
+
+        <form
+            method="POST"
+            action="{{ url_for('change_password') }}"
+        >
+
+            <div class="section">
+
+                <h3 class="section-title">
+                    🔐 Login & Security
+                </h3>
+
+
+                <div class="section-body">
+
+                    <div class="form-grid">
+
+
+                        <div class="full">
+
+                            <label>
+                                Logged in Username
+                            </label>
+
+                            <input
+                                type="text"
+                                value="{{ session.get('username', '') }}"
+                                readonly
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Current Password
+                            </label>
+
+                            <input
+                                type="password"
+                                name="current_password"
+                                required
+                                autocomplete="current-password"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                name="new_password"
+                                minlength="8"
+                                required
+                                autocomplete="new-password"
+                            >
+
+                            <div class="help">
+                                Minimum 8 characters
+                            </div>
+
+                        </div>
+
+
+                        <div class="full">
+
+                            <label>
+                                Confirm New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                name="confirm_password"
+                                minlength="8"
+                                required
+                                autocomplete="new-password"
+                            >
+
+                        </div>
+
+
+                    </div>
+
+
+                    <br>
+
+
+                    <button
+                        type="submit"
+                        class="save-btn password-btn"
+                    >
+                        🔒 Change Password
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+
+
+        <div class="footer">
+            ◆ शुद्धता हमारी पहचान • विश्वास आपका ◆
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

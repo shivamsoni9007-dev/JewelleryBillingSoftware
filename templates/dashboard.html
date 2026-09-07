@@ -405,13 +405,16 @@
 
                         Harraipur Alamchand,
                         Kaushambi
+<br>
 
+☎ {{ shop_settings.get('mobile_1', '9935850807') }}
+&nbsp; | &nbsp;
+{{ shop_settings.get('mobile_2', '9935256605') }}
                     </div>
 
                 </div>
 
             </div>
-
 
             <a
                 href="{{ url_for('logout') }}"
@@ -617,7 +620,24 @@
                 </div>
 
             </a>
+<!-- SETTINGS -->
 
+<a
+    href="{{ url_for('settings') }}"
+    class="action-card"
+>
+    <div class="action-icon">
+        ⚙️
+    </div>
+
+    <div class="action-title">
+        Settings
+    </div>
+
+    <div class="action-text">
+        Shop details, billing settings and login security
+    </div>
+</a>
         </div>
 
 

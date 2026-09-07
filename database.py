@@ -1,6 +1,9 @@
 import os
 import sqlite3
 
+from werkzeug.security import generate_password_hash
+
+
 DATABASE_URL = os.environ.get("DATABASE_URL")
 SQLITE_DATABASE = "jewellery.db"
 
@@ -10,75 +13,126 @@ SQLITE_DATABASE = "jewellery.db"
 # =========================================================
 
 class PostgresResult:
+
     def __init__(self, cursor):
+
         self.cursor = cursor
         self.lastrowid = None
 
         try:
+
             if cursor.description:
-                columns = [col.name for col in cursor.description]
+
+                columns = [
+                    col.name
+                    for col in cursor.description
+                ]
+
                 rows = cursor.fetchall()
 
                 self.rows = [
                     dict(zip(columns, row))
                     for row in rows
                 ]
+
             else:
                 self.rows = []
+
         except Exception:
             self.rows = []
 
+
     def fetchone(self):
+
         if not self.rows:
             return None
 
         return self.rows[0]
 
+
     def fetchall(self):
+
         return self.rows
 
 
+
 class PostgresConnection:
+
     def __init__(self, connection):
+
         self.connection = connection
 
+
     def _convert_query(self, query):
+
         return query.replace("?", "%s")
 
+
     def execute(self, query, params=()):
+
         query = self._convert_query(query)
 
         cursor = self.connection.cursor()
 
-        # INSERT INTO bills ke liye generated id chahiye
-        normalized = " ".join(query.strip().lower().split())
+        normalized = " ".join(
+            query.strip().lower().split()
+        )
 
-        if normalized.startswith("insert into bills") and "returning id" not in normalized:
-            query = query.rstrip().rstrip(";") + " RETURNING id"
+        # Bills insert ke baad ID chahiye
+        if (
+            normalized.startswith("insert into bills")
+            and "returning id" not in normalized
+        ):
 
-            cursor.execute(query, params)
+            query = (
+                query.rstrip().rstrip(";")
+                + " RETURNING id"
+            )
+
+            cursor.execute(
+                query,
+                params
+            )
 
             row = cursor.fetchone()
 
-            result = PostgresResult.__new__(PostgresResult)
+            result = PostgresResult.__new__(
+                PostgresResult
+            )
+
             result.cursor = cursor
             result.rows = []
-            result.lastrowid = row[0] if row else None
+
+            result.lastrowid = (
+                row[0]
+                if row
+                else None
+            )
 
             return result
 
-        cursor.execute(query, params)
+        cursor.execute(
+            query,
+            params
+        )
 
         return PostgresResult(cursor)
 
+
     def commit(self):
+
         self.connection.commit()
 
+
     def rollback(self):
+
         self.connection.rollback()
 
+
     def close(self):
+
         self.connection.close()
+
 
 
 # =========================================================
@@ -87,7 +141,7 @@ class PostgresConnection:
 
 def get_db_connection():
 
-    # Render / PostgreSQL
+    # Render PostgreSQL
     if DATABASE_URL:
 
         import psycopg
@@ -98,7 +152,8 @@ def get_db_connection():
 
         return PostgresConnection(conn)
 
-    # Local / SQLite
+
+    # Local SQLite
     conn = sqlite3.connect(
         SQLITE_DATABASE
     )
@@ -106,6 +161,61 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
 
     return conn
+
+
+
+# =========================================================
+# DEFAULT SETTINGS
+# =========================================================
+
+DEFAULT_SETTINGS = {
+
+    "shop_name_hindi":
+        "श्री राम कुमार ज्वैलर्स",
+
+    "shop_name_english":
+        "Shree Ram Kumar Jewellers",
+
+    "established":
+        "1992",
+
+    "proprietor_1":
+        "Rajesh Kumar Soni",
+
+    "proprietor_2":
+        "Umesh Kumar Soni",
+
+    "address":
+        "Harraipur Alamchand, Kaushambi",
+
+    "mobile_1":
+        "",
+
+    "mobile_2":
+        "",
+
+    "default_gst":
+        "3",
+
+    "default_payment_mode":
+        "Cash",
+
+    "invoice_footer":
+        "!! शुद्धता हमारी पहचान, विश्वास आपका !!",
+
+    "term_1":
+        "बिके हुए आभूषण 7 दिन तक बदले जा सकते हैं।",
+
+    "term_2":
+        "आभूषण की चमक खराब न हो, पर्ची साथ लाना आवश्यक है।",
+
+    "term_3":
+        "भाव की जिम्मेदारी ग्राहक की होगी।",
+
+    "term_4":
+        "माल वापसी के समय पर्ची साथ लाना आवश्यक है।"
+}
+
 
 
 # =========================================================
@@ -116,28 +226,44 @@ def init_db():
 
     conn = get_db_connection()
 
+
     # =====================================================
     # CUSTOMERS
     # =====================================================
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS customers (
+
             id INTEGER PRIMARY KEY
                 GENERATED BY DEFAULT AS IDENTITY,
+
             name TEXT NOT NULL,
+
             mobile TEXT,
+
             address TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+            created_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
         )
     """ if DATABASE_URL else """
         CREATE TABLE IF NOT EXISTS customers (
+
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+
             name TEXT NOT NULL,
+
             mobile TEXT,
+
             address TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+            created_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
 
     # =====================================================
     # BILLS
@@ -145,36 +271,65 @@ def init_db():
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS bills (
+
             id INTEGER PRIMARY KEY
                 GENERATED BY DEFAULT AS IDENTITY,
+
             bill_no TEXT UNIQUE NOT NULL,
+
             customer_name TEXT,
+
             customer_mobile TEXT,
+
             subtotal REAL DEFAULT 0,
+
             discount REAL DEFAULT 0,
+
             gst REAL DEFAULT 0,
+
             grand_total REAL DEFAULT 0,
+
             payment_mode TEXT,
+
             amount_paid REAL DEFAULT 0,
+
             balance REAL DEFAULT 0,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+            created_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
         )
     """ if DATABASE_URL else """
         CREATE TABLE IF NOT EXISTS bills (
+
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+
             bill_no TEXT UNIQUE NOT NULL,
+
             customer_name TEXT,
+
             customer_mobile TEXT,
+
             subtotal REAL DEFAULT 0,
+
             discount REAL DEFAULT 0,
+
             gst REAL DEFAULT 0,
+
             grand_total REAL DEFAULT 0,
+
             payment_mode TEXT,
+
             amount_paid REAL DEFAULT 0,
+
             balance REAL DEFAULT 0,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+            created_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
 
     # =====================================================
     # BILL ITEMS
@@ -182,36 +337,59 @@ def init_db():
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS bill_items (
+
             id INTEGER PRIMARY KEY
                 GENERATED BY DEFAULT AS IDENTITY,
+
             bill_id INTEGER NOT NULL,
+
             item_name TEXT,
+
             purity TEXT,
+
             gross_weight REAL DEFAULT 0,
+
             stone_weight REAL DEFAULT 0,
+
             net_weight REAL DEFAULT 0,
+
             rate REAL DEFAULT 0,
+
             making REAL DEFAULT 0,
+
             amount REAL DEFAULT 0,
+
             FOREIGN KEY (bill_id)
                 REFERENCES bills(id)
         )
     """ if DATABASE_URL else """
         CREATE TABLE IF NOT EXISTS bill_items (
+
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+
             bill_id INTEGER NOT NULL,
+
             item_name TEXT,
+
             purity TEXT,
+
             gross_weight REAL DEFAULT 0,
+
             stone_weight REAL DEFAULT 0,
+
             net_weight REAL DEFAULT 0,
+
             rate REAL DEFAULT 0,
+
             making REAL DEFAULT 0,
+
             amount REAL DEFAULT 0,
+
             FOREIGN KEY (bill_id)
                 REFERENCES bills(id)
         )
     """)
+
 
     # =====================================================
     # RATES
@@ -219,22 +397,37 @@ def init_db():
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS rates (
+
             id INTEGER PRIMARY KEY
                 GENERATED BY DEFAULT AS IDENTITY,
+
             metal TEXT NOT NULL,
+
             purity TEXT,
+
             rate REAL DEFAULT 0,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+            updated_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
         )
     """ if DATABASE_URL else """
         CREATE TABLE IF NOT EXISTS rates (
+
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+
             metal TEXT NOT NULL,
+
             purity TEXT,
+
             rate REAL DEFAULT 0,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+            updated_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
 
     # =====================================================
     # PAYMENTS
@@ -242,35 +435,314 @@ def init_db():
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS payments (
+
             id INTEGER PRIMARY KEY
                 GENERATED BY DEFAULT AS IDENTITY,
+
             bill_id INTEGER NOT NULL,
+
             customer_mobile TEXT,
+
             amount REAL DEFAULT 0,
+
             payment_mode TEXT,
+
             note TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            created_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP,
+
             FOREIGN KEY (bill_id)
                 REFERENCES bills(id)
         )
     """ if DATABASE_URL else """
         CREATE TABLE IF NOT EXISTS payments (
+
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+
             bill_id INTEGER NOT NULL,
+
             customer_mobile TEXT,
+
             amount REAL DEFAULT 0,
+
             payment_mode TEXT,
+
             note TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            created_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP,
+
             FOREIGN KEY (bill_id)
                 REFERENCES bills(id)
         )
     """)
 
+
+    # =====================================================
+    # APP SETTINGS
+    # =====================================================
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS app_settings (
+
+            id INTEGER PRIMARY KEY
+                GENERATED BY DEFAULT AS IDENTITY,
+
+            setting_key TEXT UNIQUE NOT NULL,
+
+            setting_value TEXT,
+
+            updated_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
+        )
+    """ if DATABASE_URL else """
+        CREATE TABLE IF NOT EXISTS app_settings (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            setting_key TEXT UNIQUE NOT NULL,
+
+            setting_value TEXT,
+
+            updated_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+
+    # =====================================================
+    # ADMIN USERS
+    # Password database me HASH form me rahega
+    # =====================================================
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS admin_users (
+
+            id INTEGER PRIMARY KEY
+                GENERATED BY DEFAULT AS IDENTITY,
+
+            username TEXT UNIQUE NOT NULL,
+
+            password_hash TEXT NOT NULL,
+
+            updated_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
+        )
+    """ if DATABASE_URL else """
+        CREATE TABLE IF NOT EXISTS admin_users (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            username TEXT UNIQUE NOT NULL,
+
+            password_hash TEXT NOT NULL,
+
+            updated_at
+                TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+
+    # =====================================================
+    # INSERT DEFAULT SHOP SETTINGS
+    # Sirf missing settings create hongi
+    # =====================================================
+
+    for key, value in DEFAULT_SETTINGS.items():
+
+        existing = conn.execute("""
+            SELECT id
+
+            FROM app_settings
+
+            WHERE setting_key = ?
+        """, (
+            key,
+        )).fetchone()
+
+        if not existing:
+
+            conn.execute("""
+                INSERT INTO app_settings (
+                    setting_key,
+                    setting_value
+                )
+
+                VALUES (?, ?)
+            """, (
+                key,
+                value
+            ))
+
+
+    # =====================================================
+    # CREATE FIRST ADMIN USER
+    #
+    # Existing Render ADMIN_USERNAME / ADMIN_PASSWORD se
+    # first database account banega.
+    #
+    # Password plain text DB me save nahi hoga.
+    # =====================================================
+
+    existing_admin = conn.execute("""
+        SELECT id
+
+        FROM admin_users
+
+        LIMIT 1
+    """).fetchone()
+
+
+    if not existing_admin:
+
+        admin_username = os.environ.get(
+            "ADMIN_USERNAME"
+        )
+
+        admin_password = os.environ.get(
+            "ADMIN_PASSWORD"
+        )
+
+
+        if (
+            admin_username
+            and admin_password
+        ):
+
+            password_hash = (
+                generate_password_hash(
+                    admin_password
+                )
+            )
+
+            conn.execute("""
+                INSERT INTO admin_users (
+
+                    username,
+
+                    password_hash
+
+                )
+
+                VALUES (?, ?)
+            """, (
+
+                admin_username,
+
+                password_hash
+            ))
+
+
     conn.commit()
     conn.close()
 
 
+
+# =========================================================
+# GET SETTINGS HELPER
+# =========================================================
+
+def get_all_settings():
+
+    conn = get_db_connection()
+
+    rows = conn.execute("""
+        SELECT
+            setting_key,
+            setting_value
+
+        FROM app_settings
+    """).fetchall()
+
+    conn.close()
+
+    settings = {}
+
+    for row in rows:
+
+        settings[
+            row["setting_key"]
+        ] = (
+            row["setting_value"]
+            or ""
+        )
+
+    return settings
+
+
+
+# =========================================================
+# UPDATE SETTING HELPER
+# =========================================================
+
+def update_setting(
+    key,
+    value
+):
+
+    conn = get_db_connection()
+
+    existing = conn.execute("""
+        SELECT id
+
+        FROM app_settings
+
+        WHERE setting_key = ?
+    """, (
+        key,
+    )).fetchone()
+
+
+    if existing:
+
+        conn.execute("""
+            UPDATE app_settings
+
+            SET
+                setting_value = ?,
+                updated_at = CURRENT_TIMESTAMP
+
+            WHERE setting_key = ?
+        """, (
+            value,
+            key
+        ))
+
+    else:
+
+        conn.execute("""
+            INSERT INTO app_settings (
+                setting_key,
+                setting_value
+            )
+
+            VALUES (?, ?)
+        """, (
+            key,
+            value
+        ))
+
+
+    conn.commit()
+    conn.close()
+
+
+
+# =========================================================
+# RUN DATABASE MANUALLY
+# =========================================================
+
 if __name__ == "__main__":
+
     init_db()
-    print("Database updated successfully!")
+
+    print(
+        "Database updated successfully!"
+    )

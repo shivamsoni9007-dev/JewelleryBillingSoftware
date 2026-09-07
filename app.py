@@ -29,9 +29,10 @@ from itsdangerous import (
 
 from database import (
     get_db_connection,
-    init_db
+    init_db,
+   get_all_settings,
+    update_setting
 )
-
 
 app = Flask(__name__)
 
@@ -45,14 +46,7 @@ app.secret_key = os.environ.get(
     "change-this-secret-key-before-production"
 )
 
-ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
-ADMIN_PASSWORD_HASH = (
-    generate_password_hash(ADMIN_PASSWORD)
-    if ADMIN_PASSWORD
-    else None
-)
 
 bill_serializer = URLSafeSerializer(
     app.secret_key,
@@ -65,7 +59,23 @@ bill_serializer = URLSafeSerializer(
 # =========================================================
 
 init_db()
+# =========================================================
+# GLOBAL SHOP SETTINGS
+# =========================================================
 
+@app.context_processor
+def inject_shop_settings():
+
+    try:
+        shop_settings = get_all_settings()
+
+    except Exception as e:
+        print("SETTINGS LOAD ERROR:", e)
+        shop_settings = {}
+
+    return {
+        "shop_settings": shop_settings
+    }
 
 # =========================================================
 # LOGIN REQUIRED
@@ -196,6 +206,10 @@ def get_bill_pending_details(
 # LOGIN
 # =========================================================
 
+# =========================================================
+# LOGIN
+# =========================================================
+
 @app.route(
     "/login",
     methods=["GET", "POST"]
@@ -222,20 +236,24 @@ def login():
             ""
         )
 
+        conn = get_db_connection()
+
+        admin = conn.execute("""
+            SELECT *
+
+            FROM admin_users
+
+            WHERE username = ?
+        """, (
+            username,
+        )).fetchone()
+
+        conn.close()
+
         if (
-            not ADMIN_USERNAME
-            or not ADMIN_PASSWORD_HASH
-        ):
-
-            error = (
-                "Login credentials configure nahi hue hain. "
-                "Render Environment Variables set kariye."
-            )
-
-        elif (
-            username == ADMIN_USERNAME
+            admin
             and check_password_hash(
-                ADMIN_PASSWORD_HASH,
+                admin["password_hash"],
                 password
             )
         ):
@@ -243,7 +261,14 @@ def login():
             session.clear()
 
             session["logged_in"] = True
-            session["username"] = ADMIN_USERNAME
+
+            session["username"] = (
+                admin["username"]
+            )
+
+            session["admin_id"] = (
+                admin["id"]
+            )
 
             return redirect(
                 url_for("dashboard")
@@ -273,7 +298,199 @@ def logout():
     return redirect(
         url_for("login")
     )
+# =========================================================
+# SOFTWARE SETTINGS
+# =========================================================
 
+@app.route(
+    "/settings",
+    methods=["GET", "POST"]
+)
+@login_required
+def settings():
+
+    message = None
+    error = None
+
+    if request.method == "POST":
+
+        try:
+
+            allowed_settings = [
+                "shop_name_hindi",
+                "shop_name_english",
+                "established",
+                "proprietor_1",
+                "proprietor_2",
+                "address",
+                "mobile_1",
+                "mobile_2",
+                "default_gst",
+                "default_payment_mode",
+                "invoice_footer",
+                "term_1",
+                "term_2",
+                "term_3",
+                "term_4"
+            ]
+
+            for key in allowed_settings:
+
+                value = request.form.get(
+                    key,
+                    ""
+                ).strip()
+
+                update_setting(
+                    key,
+                    value
+                )
+
+            message = (
+                "Settings successfully saved."
+            )
+
+        except Exception as e:
+
+            print(
+                "SETTINGS SAVE ERROR:",
+                e
+            )
+
+            error = (
+                "Settings save nahi hui: "
+                + str(e)
+            )
+
+    current_settings = (
+        get_all_settings()
+    )
+
+    return render_template(
+        "settings.html",
+        settings=current_settings,
+        message=message,
+        error=error
+    )
+
+
+# =========================================================
+# CHANGE PASSWORD
+# =========================================================
+
+@app.route(
+    "/change-password",
+    methods=["POST"]
+)
+@login_required
+def change_password():
+
+    current_password = (
+        request.form.get(
+            "current_password",
+            ""
+        )
+    )
+
+    new_password = (
+        request.form.get(
+            "new_password",
+            ""
+        )
+    )
+
+    confirm_password = (
+        request.form.get(
+            "confirm_password",
+            ""
+        )
+    )
+
+    if len(new_password) < 8:
+
+        return redirect(
+            url_for(
+                "settings",
+                password_error=1
+            )
+        )
+
+    if (
+        new_password
+        != confirm_password
+    ):
+
+        return redirect(
+            url_for(
+                "settings",
+                password_mismatch=1
+            )
+        )
+
+    conn = get_db_connection()
+
+    admin = conn.execute("""
+        SELECT *
+
+        FROM admin_users
+
+        WHERE id = ?
+    """, (
+        session.get("admin_id"),
+    )).fetchone()
+
+    if not admin:
+
+        conn.close()
+
+        session.clear()
+
+        return redirect(
+            url_for("login")
+        )
+
+    if not check_password_hash(
+        admin["password_hash"],
+        current_password
+    ):
+
+        conn.close()
+
+        return redirect(
+            url_for(
+                "settings",
+                current_password_wrong=1
+            )
+        )
+
+    new_password_hash = (
+        generate_password_hash(
+            new_password
+        )
+    )
+
+    conn.execute("""
+        UPDATE admin_users
+
+        SET
+            password_hash = ?,
+            updated_at = CURRENT_TIMESTAMP
+
+        WHERE id = ?
+    """, (
+        new_password_hash,
+        admin["id"]
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return redirect(
+        url_for(
+            "settings",
+            password_changed=1
+        )
+    )
 
 # =========================================================
 # DASHBOARD

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restore Backup - Shree Ram Kumar Jewellers</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eee8dd;
+            color: #2d1b12;
+        }
+
+        .page {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #fffdf8;
+            border: 1px solid #d6b562;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #4d050b,
+                #7e101a,
+                #981d27,
+                #650912
+            );
+            color: white;
+            text-align: center;
+            padding: 25px;
+            border-bottom: 4px solid #d4ad4f;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #fff4d6;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            color: #edcf75;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .warning {
+            background: #fff4dd;
+            border: 1px solid #e0bd66;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 22px;
+            line-height: 1.6;
+        }
+
+        .message {
+            background: #e9f8ec;
+            border: 1px solid #7fbd89;
+            color: #215c2b;
+            padding: 13px;
+            border-radius: 7px;
+            margin-bottom: 18px;
+        }
+
+        .error {
+            background: #fdeaea;
+            border: 1px solid #d98b8b;
+            color: #8b111b;
+            padding: 13px;
+            border-radius: 7px;
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #75101a;
+            margin-bottom: 8px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d6b562;
+            border-radius: 7px;
+            background: white;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button,
+        .back-btn {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button {
+            background: #7b101a;
+            color: white;
+        }
+
+        button:hover {
+            background: #981d27;
+        }
+
+        .back-btn {
+            background: #ead28f;
+            color: #551018;
+        }
+
+        @media(max-width: 600px) {
+            .page {
+                margin: 0;
+                min-height: 100vh;
+                border-radius: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button,
+            .back-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="header">
+        <h1>💾 Restore Backup</h1>
+        <p>Shree Ram Kumar Jewellers</p>
+    </div>
+
+    <div class="content">
+
+        <div class="warning">
+            <strong>Safety Check:</strong><br>
+            Yahan pehle backup file verify hogi.
+            Is step me existing bills ya customer data
+            delete/replace nahi hoga.
+        </div>
+
+        {% if message %}
+            <div class="message">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form
+    method="POST"
+    action="{{ url_for('confirm_restore_backup') }}"
+    enctype="multipart/form-data"
+>
+
+            <label>Select Backup JSON File</label>
+
+            <input
+                type="file"
+                name="backup_file"
+                accept=".json,application/json"
+                required
+            >
+
+            <div class="buttons">
+
+                <button type="submit">
+                   Verify & Continue
+                </button>
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="back-btn"
+                >
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

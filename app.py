@@ -1,6 +1,8 @@
 import os
 import csv
 import io
+import json
+from datetime import datetime
 
 from functools import wraps
 from urllib.parse import quote
@@ -1164,7 +1166,224 @@ def bills():
         bills=all_bills
     )
 
+# =========================================================
+# FULL DATA BACKUP
+# =========================================================
 
+@app.route("/download-backup")
+@login_required
+def download_backup():
+
+    conn = get_db_connection()
+
+    try:
+        backup_data = {
+            "backup_version": "1.0",
+            "shop": "Shree Ram Kumar Jewellers",
+            "bills": [],
+            "bill_items": [],
+            "payments": [],
+            "customers": [],
+            "app_settings": []
+        }
+
+        tables = [
+            "bills",
+            "bill_items",
+            "payments",
+            "customers",
+            "app_settings"
+        ]
+
+        for table in tables:
+
+            rows = conn.execute(
+                f"SELECT * FROM {table}"
+            ).fetchall()
+
+            backup_data[table] = [
+                dict(row)
+                for row in rows
+            ]
+
+        backup_json = json.dumps(
+            backup_data,
+            ensure_ascii=False,
+            indent=4,
+            default=str
+        )
+
+        return Response(
+            backup_json,
+            mimetype="application/json",
+            headers={
+                "Content-Disposition":
+                "attachment; filename=Shree_Ram_Kumar_Jewellers_Backup.json"
+            }
+        )
+
+    except Exception as e:
+
+        return Response(
+            "Backup create nahi hua: " + str(e),
+            status=500
+        )
+
+    finally:
+        conn.close()
+        # =========================================================
+# RESTORE BACKUP PAGE
+# =========================================================
+
+@app.route("/restore-backup", methods=["GET", "POST"])
+@login_required
+def restore_backup():
+
+    message = None
+    error = None
+
+    if request.method == "POST":
+
+        backup_file = request.files.get("backup_file")
+
+        if not backup_file or not backup_file.filename:
+            error = "Backup file select kariye."
+
+        elif not backup_file.filename.lower().endswith(".json"):
+            error = "Sirf JSON backup file allowed hai."
+
+        else:
+            try:
+                backup_data = json.load(backup_file)
+
+                required_sections = [
+                    "bills",
+                    "bill_items",
+                    "payments",
+                    "customers",
+                    "app_settings"
+                ]
+
+                missing_sections = [
+                    section
+                    for section in required_sections
+                    if section not in backup_data
+                ]
+
+                if missing_sections:
+                    error = (
+                        "Invalid backup file. Missing data: "
+                        + ", ".join(missing_sections)
+                    )
+
+                elif backup_data.get("shop") != "Shree Ram Kumar Jewellers":
+                    error = "Ye Shree Ram Kumar Jewellers ka valid backup nahi hai."
+
+                else:
+                    session["restore_backup_valid"] = True
+                    session["restore_backup_name"] = backup_file.filename
+
+                    message = (
+                        "Backup file valid hai. "
+                        "Abhi koi data restore/change nahi hua hai."
+                    )
+
+            except Exception as e:
+                error = "Backup file read nahi hui: " + str(e)
+
+    return render_template(
+        "restore_backup.html",
+        message=message,
+        error=error
+    )
+# =========================================================
+# CONFIRM AND RESTORE BACKUP
+# =========================================================
+
+@app.route("/confirm-restore-backup", methods=["POST"])
+@login_required
+def confirm_restore_backup():
+
+    backup_file = request.files.get("backup_file")
+
+    if not backup_file or not backup_file.filename:
+        return redirect(url_for("restore_backup"))
+
+    try:
+        backup_data = json.load(backup_file)
+
+        required_sections = [
+            "bills",
+            "bill_items",
+            "payments",
+            "customers",
+            "app_settings"
+        ]
+
+        for section in required_sections:
+            if section not in backup_data:
+                return "Invalid backup file.", 400
+
+        if backup_data.get("shop") != "Shree Ram Kumar Jewellers":
+            return "Invalid shop backup.", 400
+
+        # Store temporarily in session for confirmation
+        session["pending_restore_backup"] = backup_data
+
+        return render_template(
+            "confirm_restore.html",
+            backup_name=backup_file.filename,
+            bills_count=len(backup_data.get("bills", [])),
+            customers_count=len(backup_data.get("customers", [])),
+            payments_count=len(backup_data.get("payments", []))
+        )
+
+    except Exception as e:
+        return "Backup read nahi hua: " + str(e), 400
+    # =========================================================
+# CREATE PRE-RESTORE SAFETY BACKUP
+# =========================================================
+
+def create_pre_restore_backup():
+
+    conn = get_db_connection()
+
+    try:
+        safety_data = {
+            "backup_version": "1.0",
+            "shop": "Shree Ram Kumar Jewellers",
+            "backup_type": "pre_restore_safety_backup",
+            "created_at": datetime.now().isoformat(),
+            "bills": [],
+            "bill_items": [],
+            "payments": [],
+            "customers": [],
+            "app_settings": []
+        }
+
+        tables = [
+            "bills",
+            "bill_items",
+            "payments",
+            "customers",
+            "app_settings"
+        ]
+
+        for table in tables:
+
+            rows = conn.execute(
+                f"SELECT * FROM {table}"
+            ).fetchall()
+
+            safety_data[table] = [
+                dict(row)
+                for row in rows
+            ]
+
+        return safety_data
+
+    finally:
+        conn.close()
 # =========================================================
 # EXPORT BILLS CSV
 # =========================================================

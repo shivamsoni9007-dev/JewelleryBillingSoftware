@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Confirm Restore - Shree Ram Kumar Jewellers</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eee8dd;
+            color: #2d1b12;
+        }
+
+        .box {
+            max-width: 650px;
+            margin: 50px auto;
+            background: #fffdf8;
+            border: 2px solid #d4ad4f;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            background: #75101a;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #fff0c2;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .warning {
+            background: #fff0e5;
+            border: 1px solid #dc9b63;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .info {
+            background: #f7f1e4;
+            border: 1px solid #d6b562;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .info p {
+            margin: 8px 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .cancel,
+        .restore {
+            flex: 1;
+            padding: 13px;
+            border-radius: 7px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cancel {
+            background: #e7d39a;
+            color: #541018;
+        }
+
+        .restore {
+            background: #991c26;
+            color: white;
+        }
+
+        @media(max-width: 600px) {
+            .box {
+                margin: 0;
+                min-height: 100vh;
+                border-radius: 0;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <div class="header">
+        <h1>⚠ Confirm Restore</h1>
+    </div>
+
+    <div class="content">
+
+        <div class="warning">
+            <strong>Important:</strong><br>
+            Backup verify ho chuka hai.
+            Abhi bhi database me koi change nahi hua hai.
+            Next confirmation ke baad hi restore hoga.
+        </div>
+
+        <div class="info">
+
+            <p>
+                <strong>Backup File:</strong>
+                {{ backup_name }}
+            </p>
+
+            <p>
+                <strong>Bills:</strong>
+                {{ bills_count }}
+            </p>
+
+            <p>
+                <strong>Customers:</strong>
+                {{ customers_count }}
+            </p>
+
+            <p>
+                <strong>Payments:</strong>
+                {{ payments_count }}
+            </p>
+
+        </div>
+
+        <div class="buttons">
+
+            <a
+                href="{{ url_for('restore_backup') }}"
+                class="cancel"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="button"
+                class="restore"
+                disabled
+            >
+                Restore Data
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

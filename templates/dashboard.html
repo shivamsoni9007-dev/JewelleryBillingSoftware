@@ -620,6 +620,42 @@
                 </div>
 
             </a>
+            <!-- FULL BACKUP -->
+
+<a
+    href="{{ url_for('download_backup') }}"
+    class="action-card export-card"
+>
+    <div class="action-icon">
+        💾
+    </div>
+
+    <div class="action-title">
+        Full Backup
+    </div>
+
+    <div class="action-text">
+        Download bills, items, payments, customers and settings backup
+    </div>
+</a>
+<!-- RESTORE BACKUP -->
+
+<a
+    href="{{ url_for('restore_backup') }}"
+    class="action-card"
+>
+    <div class="action-icon">
+        ♻️
+    </div>
+
+    <div class="action-title">
+        Restore Backup
+    </div>
+
+    <div class="action-text">
+        Verify and restore a saved backup file
+    </div>
+</a>
 <!-- SETTINGS -->
 
 <a
